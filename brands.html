@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Brands | EuroSpec</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+  <script defer src="js/app.js"></script>
+</head>
+
+<body class="brands-page">
+<header>
+  <a href="index.html" class="logo"><h2>EuroSpec</h2></a>
+  <nav>
+    <ul>
+      <li><a href="inventory.html">Inventory</a></li>
+      <li><a href="brands.html">Brands</a></li>
+      <li><a href="about.html">Heritage</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+  <div class="icons">
+    <a class="search" href="#search" aria-label="Search">
+      <svg
+        width="22"
+        height="22"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M21 21L16.65 16.65M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </a>
+    <button class="theme-toggle" aria-label="Toggle Theme">
+      <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+      <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="5"></circle>
+        <line x1="12" y1="1" x2="12" y2="3"></line>
+        <line x1="12" y1="21" x2="12" y2="23"></line>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+        <line x1="1" y1="12" x2="3" y2="12"></line>
+        <line x1="21" y1="12" x2="23" y2="12"></line>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+      </svg>
+    </button>
+    <button class="mobile-nav-toggle" aria-label="Toggle Navigation">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+</header>
+
+<main>
+  <section class="brands-hero">
+    <div class="brands-hero-text">
+      <p class="tagline">CURATED EXCELLENCE</p>
+      <h1>The Pillars of German Engineering.</h1>
+    </div>
+  </section>
+
+  <section class="brand-showcase" id="porsche">
+    <div class="brand-content">
+      <div class="brand-info">
+        <span class="brand-number">01</span>
+        <img src="assets/logos/porsche-6-logo-pack/porsche-6-logo-black-and-white.png" alt="Porsche" class="brand-logo-large">
+        <h2>PORSCHE</h2>
+        <p class="location">STUTTGART, GERMANY</p>
+        <p class="description">
+          Porsche represents the absolute synthesis of daily usability and track-bred performance. From the timeless silhouette of the 911 to the cutting-edge engineering of the Taycan, Porsche remains the benchmark for driver engagement. Every component is designed with a singular purpose: to elevate the mechanical connection.
+        </p>
+        <a href="inventory.html?filter=porsche" class="btn-minimal">View Porsche Inventory</a>
+      </div>
+      <div class="brand-visual">
+         <div class="placeholder-visual">
+           <img src="assets/photos/porsche.jpg" alt="Porsche 911 Turbo" class="placeholder-image">
+         </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="brand-showcase reverse" id="bmw">
+    <div class="brand-content">
+      <div class="brand-info">
+        <span class="brand-number">02</span>
+        <img src="assets/logos/bmw-logo-logo-pack/bmw-logo-logo-black-and-white.png" alt="BMW" class="brand-logo-large">
+        <h2>BMW</h2>
+        <p class="location">MUNICH, GERMANY</p>
+        <p class="description">
+          Bayerische Motoren Werke has built its legacy on the "Ultimate Driving Machine" philosophy. Known for their precision-engineered inline-six engines and perfectly balanced chassis, BMWs are designed for those who appreciate the technical nuances of performance. From the M-series icons to modern masterpieces.
+        </p>
+        <a href="inventory.html?filter=bmw" class="btn-minimal">View BMW Inventory</a>
+      </div>
+      <div class="brand-visual">
+         <div class="placeholder-visual">
+           <img src="assets/photos/m5comp.jpg" alt="BMW M5" class="placeholder-image">
+         </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="brand-showcase" id="mercedes">
+    <div class="brand-content">
+      <div class="brand-info">
+        <span class="brand-number">03</span>
+        <img src="assets/logos/mercedes-benz-2-logo-pack/mercedes-benz-2-logo-black-and-white.png"
+             data-dark-src="assets/logos/mercedes-benz-2-logo-pack/mercedes-benz-2-logo-black-and-white.png"
+             data-light-src="assets/logos/mercedes-benz-2-logo-pack/mercedes-benz-2-logo-png-transparent.png"
+             alt="Mercedes-Benz" class="brand-logo-large theme-managed-logo">
+        <h2>MERCEDES-AMG</h2>
+        <p class="location">STUTTGART, GERMANY</p>
+        <p class="description">
+          The three-pointed star represents the pinnacle of automotive luxury and technological innovation. Mercedes-Benz consistently redefines the standards of comfort and performance, blending peerless craftsmanship with avant-garde engineering. At EuroSpec, we focus on the high-performance AMG variants and classic grand tourers.
+        </p>
+        <a href="inventory.html?filter=mercedes" class="btn-minimal">View Mercedes Inventory</a>
+      </div>
+      <div class="brand-visual">
+         <div class="placeholder-visual">
+           <img src="assets/photos/amggt-placeholder.jpg" alt="Mercedes-Benz AMG GT" class="placeholder-image">
+         </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="brand-showcase reverse" id="audi">
+    <div class="brand-content">
+      <div class="brand-info">
+        <span class="brand-number">04</span>
+        <img src="assets/logos/audi-1-logo-pack/audi-1-logo-black-and-white.png"
+             data-dark-src="assets/logos/audi-1-logo-pack/audi-1-logo-black-and-white.png"
+             data-light-src="assets/logos/audi-1-logo-pack/audi-1-logo-png-transparent.png"
+             alt="Audi" class="brand-logo-large theme-managed-logo">
+        <h2>AUDI</h2>
+        <p class="location">INGOLSTADT, GERMANY</p>
+        <p class="description">
+          Vorsprung durch Technik. Audi's commitment to progress is best exemplified by their legendary Quattro all-wheel-drive system and their mastery of minimalist, high-tech interiors. Audi combines understated elegance with explosive performance, creating vehicles that excel in every environment, from the autobahn to the alpine pass.
+        </p>
+        <a href="inventory.html?filter=audi" class="btn-minimal">View Audi Inventory</a>
+      </div>
+      <div class="brand-visual">
+         <div class="placeholder-visual">
+           <img src="assets/photos/audi-engine-placeholder.jpg" alt="Audi Sport Quattro" class="placeholder-image">
+         </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-logo">
+    <h2>EuroSpec</h2>
+  </div>
+  <div class="footer-center">
+    <p>&copy; 2026 EuroSpec. Precision Engineering. Architectural Minimalism.</p>
+  </div>
+  <div class="footer-links">
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+    <a href="careers.html">Career</a>
+    <a href="press.html">Press</a>
+  </div>
+</footer>
+</body>
+</html>

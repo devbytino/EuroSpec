@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Inventory | EuroSpec</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <script defer src="js/app.js"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Space+Grotesk:wght@300..700&display=swap"
+    rel="stylesheet"
+  />
+</head>
+
+<body>
+<header>
+  <a href="index.html" class="logo"><h2>EuroSpec</h2></a>
+  <nav>
+    <ul>
+      <li><a href="inventory.html">Inventory</a></li>
+      <li><a href="brands.html">Brands</a></li>
+      <li><a href="about.html">Heritage</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+  <div class="icons">
+    <a class="search" href="#search" aria-label="Search">
+      <svg
+        width="22"
+        height="22"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M21 21L16.65 16.65M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </a>
+    <button class="theme-toggle" aria-label="Toggle Theme">
+      <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+      <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="5"></circle>
+        <line x1="12" y1="1" x2="12" y2="3"></line>
+        <line x1="12" y1="21" x2="12" y2="23"></line>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+        <line x1="1" y1="12" x2="3" y2="12"></line>
+        <line x1="21" y1="12" x2="23" y2="12"></line>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+      </svg>
+    </button>
+    <button class="mobile-nav-toggle" aria-label="Toggle Navigation">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+</header>
+
+<section class="inventory-top">
+  <h1>Inventory</h1>
+
+  <!-- Filter by brand buttons -->
+  <div class="filter-buttons">
+    <button class="filter-button active" data-filter="all">All</button>
+    <button class="filter-button" data-filter="mercedes">Mercedes-Benz</button>
+    <button class="filter-button" data-filter="bmw">BMW</button>
+    <button class="filter-button" data-filter="audi">Audi</button>
+    <button class="filter-button" data-filter="porsche">Porsche</button>
+  </div>
+</section>
+<section class="inventory-grid-section">
+  <div class="inventory-grid" id="car-grid">
+  <!-- cars will be injected here by JavaScript -->
+  </div>
+</section>
+<footer>
+  <div class="footer-logo">
+    <h2>EuroSpec</h2>
+  </div>
+  <div class="footer-center">
+    <p>
+      &copy; 2026 EuroSpec. Precision Engineering. Architectural Minimalism.
+    </p>
+  </div>
+  <div class="footer-links">
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+    <a href="careers.html">Career</a>
+    <a href="press.html">Press</a>
+  </div>
+</footer>
+</body>
+</html>

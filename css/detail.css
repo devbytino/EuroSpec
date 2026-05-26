@@ -1,0 +1,214 @@
+/* Car Detail Page Specific Styles */
+
+/* Header Overrides for Detail Page */
+.detail-header {
+    background: transparent;
+    border-bottom: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+}
+
+.detail-header .logo h2,
+.detail-header nav ul li a,
+.detail-header .icons a,
+.detail-header .icons button {
+    color: #fff;
+}
+
+#car-detail-container {
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    max-width: none;
+}
+
+.status-message {
+    text-align: center;
+    padding: 200px 0;
+}
+
+/* Hero Section */
+.car-hero-full {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.car-hero-full img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.7) 100%);
+    display: flex;
+    align-items: flex-end;
+    padding: 80px 5% 120px;
+}
+
+.hero-content {
+    color: #fff;
+    width: 100%;
+}
+
+.hero-content h1 {
+    font-size: clamp(3rem, 10vw, 6rem);
+    margin: 0;
+    font-family: "Helvetica", "Arial", sans-serif;
+    font-weight: 700;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: -0.04em;
+    text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+
+.price {
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin: 20px 0 0;
+    opacity: 0.9;
+    letter-spacing: 2px;
+}
+
+.scroll-indicator {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #fff;
+    animation: bounce 2s infinite;
+    opacity: 0.7;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {transform: translateY(0) translateX(-50%);}
+    40% {transform: translateY(-10px) translateX(-50%);}
+    60% {transform: translateY(-5px) translateX(-50%);}
+}
+
+/* Specs Section */
+.car-specs-section {
+    background-color: var(--bg-color);
+    padding: 100px 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+}
+
+.specs-container {
+    width: 90%;
+    max-width: 1000px;
+}
+
+.specs-container h2 {
+    font-family: "Helvetica", "Arial", sans-serif;
+    font-size: 2rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 60px;
+    font-weight: 400;
+}
+
+.specs-list {
+    border-top: 1px solid var(--border-color);
+    margin-bottom: 80px;
+}
+
+.spec-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.spec-label {
+    font-size: 0.85rem;
+    color: var(--secondary-text);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-family: "Helvetica", "Arial", sans-serif;
+}
+
+.spec-value {
+    font-size: 1.1rem;
+    font-weight: 400;
+    font-family: "Helvetica", "Arial", sans-serif;
+}
+
+.car-description-section {
+    margin-bottom: 60px;
+}
+
+.car-description-section h3 {
+    font-family: "Helvetica", "Arial", sans-serif;
+    margin-bottom: 25px;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.car-description-section p {
+    line-height: 1.8;
+    color: var(--secondary-text);
+    font-size: 1.1rem;
+}
+
+.car-actions {
+    margin-top: 40px;
+}
+
+.btn-gold {
+    display: inline-block;
+    padding: 20px 50px;
+    border: 1px solid var(--text-color);
+    color: var(--text-color);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    background: transparent;
+}
+
+.btn-gold:hover {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .hero-overlay {
+        padding: 60px 20px;
+    }
+
+    .hero-content h1 {
+        font-size: 3rem;
+    }
+
+    .spec-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 15px 0;
+    }
+
+    .spec-label {
+        font-size: 0.75rem;
+    }
+
+    .spec-value {
+        font-size: 1rem;
+    }
+}
