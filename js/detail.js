@@ -16,18 +16,26 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ── 3. Fetch the car from the API ──
-  fetch(`http://localhost:3000/api/cars/${carId}`)
-    .then(res => {
-      if (!res.ok) throw new Error('Car not found');
-      return res.json();
-    })
-    .then(car => {
-      renderCar(car);
-    })
-    .catch(() => {
-      loadingEl.style.display = 'none';
-      errorEl.style.display   = 'block';
-    });
+  // ── 3. Fetch the car from the API ──
+  const sql = `SELECT * FROM cars WHERE id = ${carId}`;
+  const apiUrl = `http://localhost/EuroSpec/EuroSpec_Final/api.php?sql=${encodeURIComponent(sql)}`;
+
+  fetch(apiUrl)
+      .then(res => res.json())
+      .then(result => {
+        // Check if the API call was successful and if it actually found a row
+        if (result.success && result.data.length > 0) {
+          // Grab the first (and only) car object from the returned array
+          renderCar(result.data[0]);
+        } else {
+          throw new Error('Car not found in the database');
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        loadingEl.style.display = 'none';
+        errorEl.style.display   = 'block';
+      });
 
   // ── 4. Fill the page with car data ──
   function renderCar(car) {

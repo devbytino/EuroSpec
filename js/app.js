@@ -1,4 +1,41 @@
 /**
+ * API_URL: the address of the API to which we send our SQL queries.
+ */
+const API_URL = "http://localhost/EuroSpec/EuroSpec_Final/api.php";
+
+// Fallback data: wordt gebruikt als de database/API niet werkt,
+// zodat de pagina toch iets toont.
+const FALLBACK_PRODUCTEN = [
+  { id: 1, naam: "Cola",            prijs: 1.50, categorie_id: 1 },
+  { id: 2, naam: "Water",           prijs: 0.80, categorie_id: 1 },
+  { id: 3, naam: "Sinaasappelsap",  prijs: 2.20, categorie_id: 1 },
+  { id: 4, naam: "Chips",           prijs: 1.95, categorie_id: 2 },
+  { id: 5, naam: "Chocoladereep",   prijs: 1.10, categorie_id: 2 },
+  { id: 6, naam: "Appel",           prijs: 0.45, categorie_id: 3 },
+  { id: 7, naam: "Banaan",          prijs: 0.35, categorie_id: 3 }
+];
+
+// runQuery: sends an SQL string to the API and returns the result.
+// Usage:  const rows = await runQuery("SELECT * FROM product")
+async function runQuery(sql) {
+  try {
+    // De SQL als parameter meesturen in de URL
+    const response = await fetch(API_URL + "?sql=" + encodeURIComponent(sql));
+    const result = await response.json();
+
+    if (result.success) {
+      return result.data;          // Array met rijen
+    } else {
+      console.error("SQL fout:", result.error);
+      return FALLBACK_PRODUCTEN;   // Bij een fout: fallback data
+    }
+  } catch (fout) {
+    // De API was niet bereikbaar (server uit, verkeerde URL, ...)
+    console.error("API niet bereikbaar:", fout);
+    return FALLBACK_PRODUCTEN;
+  }
+}
+/**
  * Updates all theme-managed logos based on the current theme.
  * @param {'light'|'dark'} theme - The current active theme.
  */
@@ -13,7 +50,7 @@ function updateLogos(theme) {
 }
 
 /**
- * Checks if user had visited the site before using localStorage
+ * Checks if a user had visited the site before using localStorage
  * Sets up the theme toggle click listener
  */
 function initTheme() {
@@ -126,8 +163,7 @@ async function initFeaturedInventory() {
   if (!featuredGrid) return;
 
   try {
-    const response = await fetch('http://localhost:3000/api/cars');
-    const allCars = await response.json();
+    const allCars = await runQuery("SELECT * FROM cars");
 
     if (allCars.length === 0) {
       featuredGrid.innerHTML = '<p>No featured vehicles are available.</p>';
@@ -233,15 +269,8 @@ if (carGrid) {
       const urlParams = new URLSearchParams(window.location.search);
       const filterParam = urlParams.get('filter')?.toLowerCase();
 
-      let fetchUrl = 'http://localhost:3000/api/cars';
-
-      // If we have a filter in the URL, let's fetch everything anyway
-      // so that if the user clicks 'All' later, we don't have to re-fetch.
-      // But we can also use the backend filter if we want to be efficient.
-      // For this small app, fetching all and filtering in JS is fine and makes 'All' transition instant.
-
-      const response = await fetch(fetchUrl);
-      allCars = await response.json();
+      // We use the teacher's runQuery function to get all cars from the database
+      allCars = await runQuery("SELECT * FROM cars");
 
       if (filterParam && brandMap[filterParam]) {
         // Set active button

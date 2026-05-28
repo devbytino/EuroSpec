@@ -1,0 +1,41 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE/editor files
+.idea/
+.vscode/
+*.iml
+
+# Temporary/cache files
+.cache/
+.tmp/
+temp/
+
+# Coverage
+coverage/
+
+# Package manager files
+.pnpm-store/
+
+# Keep vendor placeholder if needed
+!js/vendor/.gitkeep
