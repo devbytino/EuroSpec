@@ -13,8 +13,8 @@ function updateLogos(theme) {
 }
 
 /**
- * Initializes the theme based on localStorage or system preferences.
- * Sets up the theme toggle click listener.
+ * Checks if user had visited the site before using localStorage
+ * Sets up the theme toggle click listener
  */
 function initTheme() {
   const themeToggle = document.querySelector('.theme-toggle');
@@ -37,8 +37,9 @@ function initTheme() {
   }
 }
 
+
 /**
- * Filters the vehicle cards based on the selected brand.
+ * Filter the vehicle cards based on the selected brand.
  * @param {string} filter - The brand to filter by, or 'all' to show everything.
  */
 function applyFilter(filter) {
@@ -292,7 +293,7 @@ if (carGrid) {
     });
   });
 
-// ── 5. Kick everything off ──
+
   loadCars();
 }
 
