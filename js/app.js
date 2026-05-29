@@ -183,7 +183,7 @@ async function initFeaturedInventory() {
       const badges = ['New Arrival', 'Rare Find', 'Top Spec', 'Exquisite'];
       const showBadge = Math.random() > 0.7;
       const badgeText = showBadge ? badges[Math.floor(Math.random() * badges.length)] : (car.status === 'Reserved' ? 'Reserved' : '');
-
+      
       return `
         <div class="inventory-card">
           <div class="card-image">
