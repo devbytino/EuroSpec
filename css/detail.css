@@ -92,9 +92,9 @@
 }
 
 @keyframes bounce {
-    0%, 20%, 50%, 80%, 100% {transform: translateY(0) translateX(-50%);}
-    40% {transform: translateY(-10px) translateX(-50%);}
-    60% {transform: translateY(-5px) translateX(-50%);}
+    0%, 20%, 50%, 80%, 100% {transform: translateY(0) translateX(-50%);} /* initial state */
+    40% {transform: translateY(-10px) translateX(-50%);} /* big bounce up*/
+    60% {transform: translateY(-5px) translateX(-50%);} /* small bounce up */
 }
 
 /* Specs Section */
@@ -187,7 +187,6 @@
     color: var(--bg-color);
 }
 
-/* Responsive Styles */
 @media (max-width: 768px) {
     .hero-overlay {
         padding: 60px 20px;
@@ -210,5 +209,10 @@
 
     .spec-value {
         font-size: 1rem;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .scroll-indicator {
+        animation: none;
     }
 }

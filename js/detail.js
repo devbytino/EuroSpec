@@ -37,16 +37,17 @@ document.addEventListener('DOMContentLoaded', () => {
         errorEl.style.display   = 'block';
       });
 
-  // ── 4. Fill the page with car data ──
+  /**
+   * Renders the car details on the page.
+   * @param car
+   */
   function renderCar(car) {
     const fullTitle = `${car.year} ${car.brand} ${car.model}`;
     document.getElementById('car-title').textContent = fullTitle;
 
-    // Price or status
-    const displayPrice = car.status === 'Price Upon Request'
-      ? 'Price Upon Request'
-      : `$${Number(car.price).toLocaleString('en-US')}`;
-    document.getElementById('car-price').textContent = displayPrice;
+    document.getElementById('car-price').textContent = car.status === 'Price Upon Request'
+        ? 'Price Upon Request'
+        : `$${Number(car.price).toLocaleString('en-US')}`;
 
     // Specs Section
     document.getElementById('car-year-brand').textContent = `${car.year} ${car.brand}`;

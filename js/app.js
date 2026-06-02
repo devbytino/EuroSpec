@@ -74,7 +74,10 @@ function initTheme() {
   }
 }
 
-
+const clearInput = () => {
+  const input = document.getElementsByTagName("input")[0];
+  input.value = "";
+}
 /**
  * Filter the vehicle cards based on the selected brand.
  * @param {string} filter - The brand to filter by, or 'all' to show everything.

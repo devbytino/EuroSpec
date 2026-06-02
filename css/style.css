@@ -72,6 +72,16 @@ image {
   max-width: 100%;
   height: auto;
 }
+
+button {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+}
 /* ==========================================================================
    COMMON COMPONENTS
    ========================================================================== */
@@ -415,7 +425,7 @@ nav ul li a:hover {
   letter-spacing: 0.1em;
 }
 
-/* --- CTA Section --- */
+/* --- Call tp action section --- */
 .cta-section {
   padding: 10rem 5%;
   text-align: center;
@@ -461,6 +471,18 @@ nav ul li a:hover {
   border-color: var(--text-color);
 }
 
+.subscribe-btn {
+  background-color: var(--btn-bg);
+  color: var(--btn-text);
+  border: 1px solid var(--text-color);
+  padding: 15px 40px;
+  font-family: "Helvetica", "Arial", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+}
 @media (max-width: 1024px) {
   .heritage-split {
     flex-direction: column;
