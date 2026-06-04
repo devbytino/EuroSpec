@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title>Producten beheren</title>
+</head>
+<body>
+
+    <h1>Producten beheren</h1>
+
+    <p><a href="index.html">Terug naar de lijst</a></p>
+
+    <!-- Formulier: toevoegen OF bewerken -->
+    <h2>Product toevoegen / bewerken</h2>
+
+    <!-- Verborgen veld: leeg = toevoegen, gevuld = bewerken -->
+    <input type="hidden" id="productId">
+
+    <p>
+        Naam:
+        <input type="text" id="naam">
+    </p>
+    <p>
+        Prijs:
+        <input type="number" id="prijs" step="0.01">
+    </p>
+    <p>
+        Categorie-id:
+        <input type="number" id="categorieId">
+    </p>
+    <p>
+        <button id="opslaanKnop">Opslaan</button>
+        <button id="annuleerKnop">Annuleren</button>
+    </p>
+
+    <!-- Lijst met alle producten + bewerk/verwijder knoppen -->
+    <h2>Alle producten</h2>
+    <ul id="productenLijst"></ul>
+
+    <!-- Eerst de helper, dan de CRUD-functies -->
+    <script src="app.js"></script>
+    <script src="crud.js"></script>
+    <script>
+        // Koppel de knoppen aan hun functies
+        document.getElementById("opslaanKnop").addEventListener("click", productOpslaan);
+        document.getElementById("annuleerKnop").addEventListener("click", formulierLeegmaken);
+
+        // Toon de lijst zodra de pagina geladen is
+        toonBeheerLijst();
+    </script>
+
+</body>
+</html>

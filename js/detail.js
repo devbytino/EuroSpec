@@ -39,7 +39,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /**
    * Renders the car details on the page.
+   * This function is called when the car data is successfully fetched from the API.
+   * updates dom elements with car data
+   * gets image path from database
    * @param car
+   * @returns {void}
    */
   function renderCar(car) {
     const fullTitle = `${car.year} ${car.brand} ${car.model}`;
@@ -55,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('car-engine').textContent     = car.engine;
     document.getElementById('car-transmission').textContent = car.transmission;
     document.getElementById('car-power').textContent        = car.power;
-    document.getElementById('car-mileage').textContent      = `${Number(car.mileage).toLocaleString('en-US')} km`;
+    document.getElementById('car-mileage').textContent      = `€{Number(car.mileage).toLocaleString('en-US')} km`;
     document.getElementById('car-top-speed').textContent    = car.top_speed || 'N/A';
 
     document.getElementById('car-description').textContent = car.description || '';

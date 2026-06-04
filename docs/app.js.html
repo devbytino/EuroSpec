@@ -1,4 +1,32 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: app.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: app.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  * API_URL: the address of the API to which we send our SQL queries.
  */
 const API_URL = "http://localhost/EuroSpec/EuroSpec_Final/api.php";
@@ -114,7 +142,7 @@ function initMobileNav() {
   const nav = document.querySelector('nav');
   const navLinks = document.querySelectorAll('nav ul li a');
 
-  if (toggle && nav) {
+  if (toggle &amp;&amp; nav) {
     toggle.addEventListener('click', () => {
       toggle.classList.toggle('active');
       nav.classList.toggle('active');
@@ -170,7 +198,7 @@ async function initFeaturedInventory() {
     const allCars = await runQuery("SELECT * FROM cars");
 
     if (allCars.length === 0) {
-      featuredGrid.innerHTML = '<p>No featured vehicles are available.</p>';
+      featuredGrid.innerHTML = '&lt;p>No featured vehicles are available.&lt;/p>';
       return;
     }
 
@@ -187,7 +215,7 @@ async function initFeaturedInventory() {
       const badges = ['New Arrival', 'Rare Find', 'Top Spec', 'Exquisite'];
       // if car is older than 2005, only show "Classic" badge instead of "New Arrival"
       switch (car.year) {
-        case car.year < 2005:
+        case car.year &lt; 2005:
           badges.length = 1; // Only "Classic" badge
           badges[0] = 'Classic';
           break;
@@ -196,31 +224,31 @@ async function initFeaturedInventory() {
           badges[0] = 'New Arrival';
           break;
       }
-      const badgeText = Math.random() < 0.5 ? badges[Math.floor(Math.random() * badges.length)] : '';
+      const badgeText = Math.random() &lt; 0.5 ? badges[Math.floor(Math.random() * badges.length)] : '';
 
       
       return `
-        <div class="inventory-card">
-          <div class="card-image">
-            <img src="${car.image_path}" alt="${car.brand} ${car.model}" />
-            ${badgeText ? `<div class="card-badge">${badgeText}</div>` : ''}
-          </div>
-          <div class="card-content">
-            <div class="card-meta">${car.year} • ${car.brand.toUpperCase()}</div>
-            <h3>${car.model}</h3>
-            <p>${car.description || 'Experience the pinnacle of European engineering and performance.'}</p>
-            <div class="card-footer">
-              <span class="price">€{displayPrice}</span>
-              <a href="car-detail.html?id=${car.id}" class="btn-outline">Details</a>
-            </div>
-          </div>
-        </div>
+        &lt;div class="inventory-card">
+          &lt;div class="card-image">
+            &lt;img src="${car.image_path}" alt="${car.brand} ${car.model}" />
+            ${badgeText ? `&lt;div class="card-badge">${badgeText}&lt;/div>` : ''}
+          &lt;/div>
+          &lt;div class="card-content">
+            &lt;div class="card-meta">${car.year} • ${car.brand.toUpperCase()}&lt;/div>
+            &lt;h3>${car.model}&lt;/h3>
+            &lt;p>${car.description || 'Experience the pinnacle of European engineering and performance.'}&lt;/p>
+            &lt;div class="card-footer">
+              &lt;span class="price">€{displayPrice}&lt;/span>
+              &lt;a href="car-detail.html?id=${car.id}" class="btn-outline">Details&lt;/a>
+            &lt;/div>
+          &lt;/div>
+        &lt;/div>
       `;
     }).join('');
 
   } catch (error) {
     console.error('Failed to load featured inventory:', error);
-    featuredGrid.innerHTML = '<p>Check back soon for our latest arrivals.</p>';
+    featuredGrid.innerHTML = '&lt;p>Check back soon for our latest arrivals.&lt;/p>';
   }
 }
 
@@ -253,21 +281,21 @@ if (carGrid) {
       : `$${Number(car.price).toLocaleString('en-US')}`;
 
     return `
-    <article class="vehicle-card" data-brand="${car.brand.toLowerCase().replace('-', '')}">
-      <a href="car-detail.html?id=${car.id}">
-        <img src="${car.image_path}" alt="${car.year} ${car.brand} ${car.model}" />
-        <div class="vehicle-info">
-          <div>
-            <h2>${car.year} ${car.model}</h2>
-            <p>${car.brand}</p>
-          </div>
-          <div class="vehicle-meta">
-            <strong>${displayPrice}</strong>
-            <span>${Number(car.mileage).toLocaleString()} km</span>
-          </div>
-        </div>
-      </a>
-    </article>
+    &lt;article class="vehicle-card" data-brand="${car.brand.toLowerCase().replace('-', '')}">
+      &lt;a href="car-detail.html?id=${car.id}">
+        &lt;img src="${car.image_path}" alt="${car.year} ${car.brand} ${car.model}" />
+        &lt;div class="vehicle-info">
+          &lt;div>
+            &lt;h2>${car.year} ${car.model}&lt;/h2>
+            &lt;p>${car.brand}&lt;/p>
+          &lt;/div>
+          &lt;div class="vehicle-meta">
+            &lt;strong>${displayPrice}&lt;/strong>
+            &lt;span>${Number(car.mileage).toLocaleString()} km&lt;/span>
+          &lt;/div>
+        &lt;/div>
+      &lt;/a>
+    &lt;/article>
   `;
   }
 
@@ -278,7 +306,7 @@ if (carGrid) {
    */
   function renderCars(cars) {
     if (cars.length === 0) {
-      carGrid.innerHTML = '<p class="no-results">No vehicles were found.</p>';
+      carGrid.innerHTML = '&lt;p class="no-results">No vehicles were found.&lt;/p>';
       return;
     }
     carGrid.innerHTML = cars.map(createCarCard).join('');
@@ -289,7 +317,7 @@ if (carGrid) {
    * checks for a "filter" param in the url to pre-apply a brand filter and set the active butto.
    */
   async function loadCars() {
-    carGrid.innerHTML = '<p class="no-results">Loading vehicles...</p>';
+    carGrid.innerHTML = '&lt;p class="no-results">Loading vehicles...&lt;/p>';
 
     try {
       // Check for filter in URL
@@ -300,7 +328,7 @@ if (carGrid) {
       allCars = await runQuery("SELECT * FROM cars");
       
       // If there's a valid filter, apply it and set the active button
-      if (filterParam && brandMap[filterParam]) {
+      if (filterParam &amp;&amp; brandMap[filterParam]) {
         // Set active button
         const filterButtons = document.querySelectorAll('.filter-button');
         filterButtons.forEach(btn => {
@@ -319,7 +347,7 @@ if (carGrid) {
       }
     // error handling: if the API call fails, show a message and log the error
     } catch (error) {
-      carGrid.innerHTML = '<p class="no-results">Failed to load vehicles.</p>';
+      carGrid.innerHTML = '&lt;p class="no-results">Failed to load vehicles.&lt;/p>';
       console.error('API error:', error);
     }
   }
@@ -358,9 +386,32 @@ if (carGrid) {
 const metaTheme = document.querySelector('meta[name="theme-color"]');
 
 window.addEventListener('scroll', () => {
-  if (window.scrollY < 600) {
+  if (window.scrollY &lt; 600) {
     metaTheme.setAttribute('content', '#d0d0d0'); // hero section grey
   } else {
     metaTheme.setAttribute('content', '#ffffff'); // rest of site
   }
 });
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#API_URL">API_URL</a></li><li><a href="global.html#applyFilter">applyFilter</a></li><li><a href="global.html#createCarCard">createCarCard</a></li><li><a href="global.html#initFeaturedInventory">initFeaturedInventory</a></li><li><a href="global.html#initMobileNav">initMobileNav</a></li><li><a href="global.html#initTheme">initTheme</a></li><li><a href="global.html#loadCars">loadCars</a></li><li><a href="global.html#renderCars">renderCars</a></li><li><a href="global.html#updateLogos">updateLogos</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Thu Jun 04 2026 14:32:33 GMT+0200 (Central European Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
