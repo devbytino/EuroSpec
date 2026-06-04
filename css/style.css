@@ -94,6 +94,7 @@ header {
   top: 0;
   color: var(--text-color);
   padding: 1.5em;
+  padding-top: calc(1.5em + env(safe-area-inset-top));
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -107,7 +108,6 @@ header {
   z-index: 100;
   background: var(--header-bg); /*  tint, semi-transparent */
   backdrop-filter: blur(3px);       /*  frosted glass */
-  -webkit-backdrop-filter: blur(3px); /* safari  */
   border-bottom: 1px solid var(--border-color);
 }
 
@@ -1482,7 +1482,7 @@ footer {
 
 @media (max-width: 1024px) {
   header, .home-header {
-    padding: 1rem 2rem;
+    padding: calc(1rem + env(safe-area-inset-top)) 2rem 1rem;
   }
 }
 
