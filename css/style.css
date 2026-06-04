@@ -107,7 +107,7 @@ header {
   z-index: 100;
   background: var(--header-bg); /*  tint, semi-transparent */
   backdrop-filter: blur(3px);       /*  frosted glass */
-  -webkit-backdrop-filter: blur(3px); /* for safari  */
+  -webkit-backdrop-filter: blur(3px); /* safari  */
   border-bottom: 1px solid var(--border-color);
 }
 
@@ -140,6 +140,7 @@ nav ul li a {
   color: var(--text-color);
   text-decoration: none;
   transition: color 0.3s ease;
+  font-weight: 650;
 }
 
 nav ul li a:hover {
@@ -425,6 +426,16 @@ nav ul li a:hover {
   letter-spacing: 0.1em;
 }
 
+.explore-btn {
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  padding: 1rem 2rem;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: background 0.3s ease, color 0.3s ease;
+  max-width: 400px;
+}
 /* --- Call tp action section --- */
 .cta-section {
   padding: 10rem 5%;
@@ -478,11 +489,16 @@ nav ul li a:hover {
   padding: 15px 40px;
   font-family: "Helvetica", "Arial", sans-serif;
   font-size: 0.8rem;
-  font-weight: 500;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-top: 20px;
 }
+
+.subscribe-btn:hover {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
 @media (max-width: 1024px) {
   .heritage-split {
     flex-direction: column;

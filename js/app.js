@@ -159,7 +159,7 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 /**
- * Featured Inventory Logic (Homepage)
+ * Featured Inventory
  */
 async function initFeaturedInventory() {
   const featuredGrid = document.getElementById('featured-grid');
@@ -293,7 +293,7 @@ if (carGrid) {
         renderCars(allCars);
       }
     } catch (error) {
-      carGrid.innerHTML = '<p class="no-results">Failed to load vehicles. Is the server running?</p>';
+      carGrid.innerHTML = '<p class="no-results">Failed to load vehicles.</p>';
       console.error('API error:', error);
     }
   }
