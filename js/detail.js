@@ -1,3 +1,8 @@
+/**
+ * Car Detail page logic.
+ * Fetches a single car's details based on the 'id' parameter in the URL.
+ */
+
 document.addEventListener('DOMContentLoaded', () => {
 
   // ── 1. Read the car ID from the URL ──
@@ -10,15 +15,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ── 2. If no ID in URL, show error immediately ──
   if (!carId) {
-    loadingEl.style.display = 'none';
-    errorEl.style.display   = 'block';
+    if (loadingEl) loadingEl.style.display = 'none';
+    if (errorEl) errorEl.style.display   = 'block';
     return;
   }
 
-  // ── 3. Fetch the car from the API ──
-  // ── 3. Fetch the car from the API ──
-  const sql = `SELECT * FROM cars WHERE id = ${carId}`;
-  const apiUrl = `http://localhost/EuroSpec/EuroSpec_Final/api.php?sql=${encodeURIComponent(sql)}`;
+  // ── 3. Fetch the car from the API using a JOIN ──
+  // We use a JOIN to get the BrandName even though the cars table only has brandID.
+  const sql = `SELECT cars.*, brands.BrandName AS brand FROM cars JOIN brands ON cars.brandID = brands.BrandId WHERE cars.id = ${carId}`;
+  const apiUrl = `api.php?sql=${encodeURIComponent(sql)}`;
 
   fetch(apiUrl)
       .then(res => res.json())
@@ -33,45 +38,67 @@ document.addEventListener('DOMContentLoaded', () => {
       })
       .catch((err) => {
         console.error(err);
-        loadingEl.style.display = 'none';
-        errorEl.style.display   = 'block';
+        if (loadingEl) loadingEl.style.display = 'none';
+        if (errorEl) errorEl.style.display   = 'block';
       });
 
   /**
    * Renders the car details on the page.
-   * This function is called when the car data is successfully fetched from the API.
-   * updates dom elements with car data
-   * gets image path from database
-   * @param car
-   * @returns {void}
+   * This function updates the DOM elements with data from the car object.
+   * 
+   * @param {Object} car - The car data from the database.
    */
   function renderCar(car) {
-    const fullTitle = `${car.year} ${car.brand} ${car.model}`;
-    document.getElementById('car-title').textContent = fullTitle;
+    if (!car) return;
+    const brandName = car.brand || 'Unknown';
+    const fullTitle = `${car.year} ${brandName} ${car.model}`;
+    
+    // Set text content for various elements
+    const titleEl = document.getElementById('car-title');
+    if (titleEl) titleEl.textContent = fullTitle;
 
-    document.getElementById('car-price').textContent = car.status === 'Price Upon Request'
-        ? 'Price Upon Request'
-        : `$${Number(car.price).toLocaleString('en-US')}`;
+    const priceEl = document.getElementById('car-price');
+    if (priceEl) {
+        priceEl.textContent = car.status === 'Price Upon Request'
+            ? 'Price Upon Request'
+            : `$${Number(car.price).toLocaleString('en-US')}`;
+    }
 
     // Specs Section
-    document.getElementById('car-year-brand').textContent = `${car.year} ${car.brand}`;
-    document.getElementById('car-model-name').textContent = car.model;
-    document.getElementById('car-engine').textContent     = car.engine;
-    document.getElementById('car-transmission').textContent = car.transmission;
-    document.getElementById('car-power').textContent        = car.power;
-    document.getElementById('car-mileage').textContent      = `€{Number(car.mileage).toLocaleString('en-US')} km`;
-    document.getElementById('car-top-speed').textContent    = car.top_speed || 'N/A';
+    const yearBrandEl = document.getElementById('car-year-brand');
+    if (yearBrandEl) yearBrandEl.textContent = `${car.year} ${brandName}`;
 
-    document.getElementById('car-description').textContent = car.description || '';
+    const modelNameEl = document.getElementById('car-model-name');
+    if (modelNameEl) modelNameEl.textContent = car.model;
 
-    // Image — use the path directly from DB
+    const engineEl = document.getElementById('car-engine');
+    if (engineEl) engineEl.textContent = car.engine;
+
+    const transEl = document.getElementById('car-transmission');
+    if (transEl) transEl.textContent = car.transmission;
+
+    const powerEl = document.getElementById('car-power');
+    if (powerEl) powerEl.textContent = car.power;
+
+    const mileageEl = document.getElementById('car-mileage');
+    if (mileageEl) mileageEl.textContent = `${Number(car.mileage).toLocaleString('en-US')} km`;
+
+    const speedEl = document.getElementById('car-top-speed');
+    if (speedEl) speedEl.textContent = car.top_speed || 'N/A';
+
+    const descEl = document.getElementById('car-description');
+    if (descEl) descEl.textContent = car.description || '';
+
+    // Image — set src using the path from the database
     const carImage = document.getElementById('car-image');
-    carImage.src = car.image_path;
-    carImage.alt = fullTitle;
+    if (carImage) {
+        carImage.src = car.image_path;
+        carImage.alt = fullTitle;
+    }
 
     // Show content, hide loading
-    loadingEl.style.display = 'none';
-    contentEl.style.display = 'block';
+    if (loadingEl) loadingEl.style.display = 'none';
+    if (contentEl) contentEl.style.display = 'block';
 
     document.title = `${fullTitle} | EuroSpec`;
   }

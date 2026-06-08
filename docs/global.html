@@ -105,6 +105,7 @@
 
 <div class="description">
     API_URL: the address of the API to which we send our SQL queries.
+We use a relative path so it works regardless of your local folder name.
 </div>
 
 
@@ -142,7 +143,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="app.js.html">app.js</a>, <a href="app.js.html#line4">line 4</a>
+        <a href="app.js.html">app.js</a>, <a href="app.js.html#line5">line 5</a>
     </li></ul></dd>
     
 
@@ -170,7 +171,7 @@
     
 
     
-    <h4 class="name" id="applyFilter"><span class="type-signature"></span>applyFilter<span class="signature">(filter)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="formulierLeegmaken"><span class="type-signature"></span>formulierLeegmaken<span class="signature">()</span><span class="type-signature"></span></h4>
     
 
     
@@ -178,7 +179,8 @@
 
 
 <div class="description">
-    Filter the vehicle cards based on the selected brand.
+    Clears all input fields in the management form.
+Used after saving a product or when the user cancels editing.
 </div>
 
 
@@ -187,55 +189,6 @@
 
 
 
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>filter</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The brand to filter by, or 'all' to show everything.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -271,7 +224,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="app.js.html">app.js</a>, <a href="app.js.html#line85">line 85</a>
+        <a href="crud.js.html">crud.js</a>, <a href="crud.js.html#line68">line 68</a>
     </li></ul></dd>
     
 
@@ -307,7 +260,7 @@
     
 
     
-    <h4 class="name" id="createCarCard"><span class="type-signature"></span>createCarCard<span class="signature">(car)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    <h4 class="name" id="formulierVullen"><span class="type-signature"></span>formulierVullen<span class="signature">(product)</span><span class="type-signature"></span></h4>
     
 
     
@@ -315,7 +268,8 @@
 
 
 <div class="description">
-    Creates an HTML card for a single car
+    Populates the HTML form fields with data from a specific car object.
+Used when the user clicks the "Bewerken" (Edit) button.
 </div>
 
 
@@ -351,7 +305,7 @@
 
         <tr>
             
-                <td class="name"><code>car</code></td>
+                <td class="name"><code>product</code></td>
             
 
             <td class="type">
@@ -367,7 +321,7 @@
 
             
 
-            <td class="description last">The car object</td>
+            <td class="description last">The car object containing data to fill.</td>
         </tr>
 
     
@@ -408,7 +362,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="app.js.html">app.js</a>, <a href="app.js.html#line250">line 250</a>
+        <a href="crud.js.html">crud.js</a>, <a href="crud.js.html#line56">line 56</a>
     </li></ul></dd>
     
 
@@ -433,28 +387,6 @@
 
 
 
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    The HTML for the car card
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">string</span>
-
-
-    </dd>
-</dl>
-
-    
 
 
 
@@ -474,8 +406,7 @@
 
 
 <div class="description">
-    Featured Inventory
-Fetches all cars from the database, randomly selects 3, and displays them in the featured grid.
+    Featured Inventory: Randomly selects 3 cars and displays them.
 </div>
 
 
@@ -519,7 +450,144 @@ Fetches all cars from the database, randomly selects 3, and displays them in the
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="app.js.html">app.js</a>, <a href="app.js.html#line165">line 165</a>
+        <a href="app.js.html">app.js</a>, <a href="app.js.html#line102">line 102</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="initInventoryPage"><span class="type-signature">(async) </span>initInventoryPage<span class="signature">(carGrid)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Logic for the Inventory page (filtering and list rendering).
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>carGrid</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The container element for the car list.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="app.js.html">app.js</a>, <a href="app.js.html#line197">line 197</a>
     </li></ul></dd>
     
 
@@ -563,7 +631,7 @@ Fetches all cars from the database, randomly selects 3, and displays them in the
 
 
 <div class="description">
-    Initializes mobile navigation toggle and link click handlers.
+    Initializes mobile navigation toggle.
 </div>
 
 
@@ -607,7 +675,7 @@ Fetches all cars from the database, randomly selects 3, and displays them in the
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="app.js.html">app.js</a>, <a href="app.js.html#line112">line 112</a>
+        <a href="app.js.html">app.js</a>, <a href="app.js.html#line75">line 75</a>
     </li></ul></dd>
     
 
@@ -651,8 +719,7 @@ Fetches all cars from the database, randomly selects 3, and displays them in the
 
 
 <div class="description">
-    Checks if a user had visited the site before using localStorage
-Sets up the theme toggle click listener
+    Initialises theme based on preference and sets up toggle listener.
 </div>
 
 
@@ -696,7 +763,7 @@ Sets up the theme toggle click listener
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="app.js.html">app.js</a>, <a href="app.js.html#line56">line 56</a>
+        <a href="app.js.html">app.js</a>, <a href="app.js.html#line51">line 51</a>
     </li></ul></dd>
     
 
@@ -732,7 +799,7 @@ Sets up the theme toggle click listener
     
 
     
-    <h4 class="name" id="loadCars"><span class="type-signature">(async) </span>loadCars<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="productOpslaan"><span class="type-signature">(async) </span>productOpslaan<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span></h4>
     
 
     
@@ -740,8 +807,9 @@ Sets up the theme toggle click listener
 
 
 <div class="description">
-    Loads all cars from the database and renders them, applying any filter from the URL if present.
-checks for a "filter" param in the url to pre-apply a brand filter and set the active butto.
+    CREATE or UPDATE: Saves the form data to the database.
+If productId is empty, it performs an INSERT (Create).
+If productId has a value, it performs an UPDATE (Update).
 </div>
 
 
@@ -785,7 +853,7 @@ checks for a "filter" param in the url to pre-apply a brand filter and set the a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="app.js.html">app.js</a>, <a href="app.js.html#line291">line 291</a>
+        <a href="crud.js.html">crud.js</a>, <a href="crud.js.html#line84">line 84</a>
     </li></ul></dd>
     
 
@@ -810,6 +878,24 @@ checks for a "filter" param in the url to pre-apply a brand filter and set the a
 
 
 
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;void></span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -821,7 +907,7 @@ checks for a "filter" param in the url to pre-apply a brand filter and set the a
     
 
     
-    <h4 class="name" id="renderCars"><span class="type-signature"></span>renderCars<span class="signature">(cars)</span><span class="type-signature"> &rarr; {void}</span></h4>
+    <h4 class="name" id="productVerwijderen"><span class="type-signature">(async) </span>productVerwijderen<span class="signature">(id)</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span></h4>
     
 
     
@@ -829,7 +915,7 @@ checks for a "filter" param in the url to pre-apply a brand filter and set the a
 
 
 <div class="description">
-    Shows the list of cars into the grid
+    DELETE: Removes a car from the database after user confirmation.
 </div>
 
 
@@ -865,13 +951,16 @@ checks for a "filter" param in the url to pre-apply a brand filter and set the a
 
         <tr>
             
-                <td class="name"><code>cars</code></td>
+                <td class="name"><code>id</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Array</span>
+<span class="param-type">number</span>
+|
+
+<span class="param-type">string</span>
 
 
             
@@ -881,7 +970,7 @@ checks for a "filter" param in the url to pre-apply a brand filter and set the a
 
             
 
-            <td class="description last">The list of car objects to render</td>
+            <td class="description last">The unique ID of the car to delete.</td>
         </tr>
 
     
@@ -922,7 +1011,7 @@ checks for a "filter" param in the url to pre-apply a brand filter and set the a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="app.js.html">app.js</a>, <a href="app.js.html#line279">line 279</a>
+        <a href="crud.js.html">crud.js</a>, <a href="crud.js.html#line129">line 129</a>
     </li></ul></dd>
     
 
@@ -958,7 +1047,273 @@ checks for a "filter" param in the url to pre-apply a brand filter and set the a
     </dt>
     <dd>
         
-<span class="param-type">void</span>
+<span class="param-type">Promise.&lt;void></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="runQuery"><span class="type-signature">(async) </span>runQuery<span class="signature">(sql)</span><span class="type-signature"> &rarr; {Promise.&lt;Array>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Sends an SQL string to the API and returns the result.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>sql</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The SQL query to execute.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="app.js.html">app.js</a>, <a href="app.js.html#line17">line 17</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    - Returns an array of rows if successful.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;Array></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="toonBeheerLijst"><span class="type-signature">(async) </span>toonBeheerLijst<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    READ: Fetches all cars from the database with their brand names and displays them in a list.
+Uses a SQL JOIN to combine 'cars' and 'brands' tables.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="crud.js.html">crud.js</a>, <a href="crud.js.html#line13">line 13</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;void></span>
 
 
     </dd>
@@ -1080,7 +1435,7 @@ checks for a "filter" param in the url to pre-apply a brand filter and set the a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="app.js.html">app.js</a>, <a href="app.js.html#line42">line 42</a>
+        <a href="app.js.html">app.js</a>, <a href="app.js.html#line38">line 38</a>
     </li></ul></dd>
     
 
@@ -1126,13 +1481,13 @@ checks for a "filter" param in the url to pre-apply a brand filter and set the a
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#API_URL">API_URL</a></li><li><a href="global.html#applyFilter">applyFilter</a></li><li><a href="global.html#createCarCard">createCarCard</a></li><li><a href="global.html#initFeaturedInventory">initFeaturedInventory</a></li><li><a href="global.html#initMobileNav">initMobileNav</a></li><li><a href="global.html#initTheme">initTheme</a></li><li><a href="global.html#loadCars">loadCars</a></li><li><a href="global.html#renderCars">renderCars</a></li><li><a href="global.html#updateLogos">updateLogos</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#API_URL">API_URL</a></li><li><a href="global.html#formulierLeegmaken">formulierLeegmaken</a></li><li><a href="global.html#formulierVullen">formulierVullen</a></li><li><a href="global.html#initFeaturedInventory">initFeaturedInventory</a></li><li><a href="global.html#initInventoryPage">initInventoryPage</a></li><li><a href="global.html#initMobileNav">initMobileNav</a></li><li><a href="global.html#initTheme">initTheme</a></li><li><a href="global.html#productOpslaan">productOpslaan</a></li><li><a href="global.html#productVerwijderen">productVerwijderen</a></li><li><a href="global.html#runQuery">runQuery</a></li><li><a href="global.html#toonBeheerLijst">toonBeheerLijst</a></li><li><a href="global.html#updateLogos">updateLogos</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Thu Jun 04 2026 14:32:33 GMT+0200 (Central European Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Sat Jun 06 2026 09:53:53 GMT+0200 (Central European Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

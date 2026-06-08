@@ -1,40 +1,36 @@
 /**
  * API_URL: the address of the API to which we send our SQL queries.
+ * We use a relative path so it works regardless of your local folder name.
  */
-const API_URL = "http://localhost/EuroSpec/EuroSpec_Final/api.php";
+const API_URL = "api.php";
 
-// Fallback data: wordt gebruikt als de database/API niet werkt,
-// zodat de pagina toch iets toont.
-const FALLBACK_PRODUCTEN = [
-  { id: 1, naam: "Cola",            prijs: 1.50, categorie_id: 1 },
-  { id: 2, naam: "Water",           prijs: 0.80, categorie_id: 1 },
-  { id: 3, naam: "Sinaasappelsap",  prijs: 2.20, categorie_id: 1 },
-  { id: 4, naam: "Chips",           prijs: 1.95, categorie_id: 2 },
-  { id: 5, naam: "Chocoladereep",   prijs: 1.10, categorie_id: 2 },
-  { id: 6, naam: "Appel",           prijs: 0.45, categorie_id: 3 },
-  { id: 7, naam: "Banaan",          prijs: 0.35, categorie_id: 3 }
-];
+// Fallback data: empty array to prevent crashes if the API is down
+const FALLBACK_PRODUCTEN = [];
 
-// runQuery: sends an SQL string to the API and returns the result.
-// Usage:  const rows = await runQuery("SELECT * FROM product")
+/**
+ * Sends an SQL string to the API and returns the result.
+ * 
+ * @async
+ * @param {string} sql - The SQL query to execute.
+ * @returns {Promise<Array>} - Returns an array of rows if successful.
+ */
 async function runQuery(sql) {
   try {
-    // De SQL als parameter meesturen in de URL
     const response = await fetch(API_URL + "?sql=" + encodeURIComponent(sql));
     const result = await response.json();
 
     if (result.success) {
       return result.data;          // Array met rijen
     } else {
-      console.error("SQL fout:", result.error);
+      console.error("SQL fout in runQuery:", result.error);
       return FALLBACK_PRODUCTEN;   // Bij een fout: fallback data
     }
   } catch (fout) {
-    // De API was niet bereikbaar (server uit, verkeerde URL, ...)
-    console.error("API niet bereikbaar:", fout);
+    console.error("API niet bereikbaar in runQuery:", fout);
     return FALLBACK_PRODUCTEN;
   }
 }
+
 /**
  * Updates all theme-managed logos based on the current theme.
  * @param {'light'|'dark'} theme - The current active theme.
@@ -50,8 +46,7 @@ function updateLogos(theme) {
 }
 
 /**
- * Checks if a user had visited the site before using localStorage
- * Sets up the theme toggle click listener
+ * Initialises theme based on preference and sets up toggle listener.
  */
 function initTheme() {
   const themeToggle = document.querySelector('.theme-toggle');
@@ -74,40 +69,8 @@ function initTheme() {
   }
 }
 
-const clearInput = () => {
-  const input = document.getElementsByTagName("input")[0];
-  input.value = "";
-}
 /**
- * Filter the vehicle cards based on the selected brand.
- * @param {string} filter - The brand to filter by, or 'all' to show everything.
- */
-function applyFilter(filter) {
-  const vehicles = document.querySelectorAll('.vehicle-card');
-  const buttons = document.querySelectorAll('.filter-button');
-
-  if (buttons.length === 0) return;
-
-  buttons.forEach(btn => {
-    if (btn.getAttribute('data-filter') === filter) {
-      btn.classList.add('active');
-    } else {
-      btn.classList.remove('active');
-    }
-  });
-
-  vehicles.forEach(card => {
-    const brand = card.getAttribute('data-brand');
-    if (filter === 'all' || brand === filter) {
-      card.style.display = 'block'; // Show card
-    } else {
-      card.style.display = 'none';  // Hide card
-    }
-  });
-}
-
-/**
- * Initializes mobile navigation toggle and link click handlers.
+ * Initializes mobile navigation toggle.
  */
 function initMobileNav() {
   const toggle = document.querySelector('.mobile-nav-toggle');
@@ -132,18 +95,87 @@ function initMobileNav() {
 }
 
 /**
+ * Featured Inventory: Randomly selects 3 cars and displays them.
+ * 
+ * @async
+ */
+async function initFeaturedInventory() {
+  const featuredGrid = document.getElementById('featured-grid');
+  if (!featuredGrid) return;
+
+  try {
+    // Using specific column names for better compatibility
+    const allCars = await runQuery("SELECT cars.id, cars.brandID, brands.BrandName AS brand, cars.model, cars.year, cars.price, cars.image_path, cars.status, cars.description FROM cars JOIN brands ON cars.brandID = brands.BrandId");
+
+    console.log("Featured Inventory - Cars fetched:", allCars);
+
+    if (allCars.length === 0) {
+      featuredGrid.innerHTML = '<p>No featured vehicles are available.</p>';
+      return;
+    }
+
+    // Select 3 random cars
+    const shuffled = [...allCars].sort(() => 0.5 - Math.random());
+    const featuredCars = shuffled.slice(0, 3);
+
+    featuredGrid.innerHTML = featuredCars.map(car => {
+      const displayPrice = car.status === 'Price Upon Request'
+        ? 'Price Upon Request'
+        : `$${Number(car.price).toLocaleString('en-US')}`;
+
+      const brandName = car.brand || 'Unknown';
+
+      const badges = ['New Arrival', 'Rare Find', 'Top Spec', 'Exquisite'];
+      if (car.year < 2005) {
+          badges.length = 1;
+          badges[0] = 'Classic';
+      } else if (car.year >= 2020) {
+          badges.length = 2;
+          badges[0] = 'New Arrival';
+      }
+      const badgeText = Math.random() < 0.5 ? badges[Math.floor(Math.random() * badges.length)] : '';
+      
+      return `
+        <div class="inventory-card">
+          <div class="card-image">
+            <img src="${car.image_path}" alt="${brandName} ${car.model}" />
+            ${badgeText ? `<div class="card-badge">${badgeText}</div>` : ''}
+          </div>
+          <div class="card-content">
+            <div class="card-meta">${car.year} • ${brandName.toUpperCase()}</div>
+            <h3>${car.model}</h3>
+            <p>${car.description || 'Experience the pinnacle of European engineering and performance.'}</p>
+            <div class="card-footer">
+              <span class="price">${displayPrice}</span>
+              <a href="car-detail.html?id=${car.id}" class="btn-outline">Details</a>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+  } catch (error) {
+    console.error('Failed to load featured inventory:', error);
+    featuredGrid.innerHTML = '<p>Check back soon for our latest arrivals.</p>';
+  }
+}
+
+/**
  * Main initialization on DOM content loaded.
  */
 window.addEventListener('DOMContentLoaded', () => {
   initTheme();
   initMobileNav();
   initFeaturedInventory();
+  
+  // Handle Inventory Page if we are on it
+  const carGrid = document.getElementById('car-grid');
+  if (carGrid) {
+    initInventoryPage(carGrid);
+  }
 
-  // Smooth appearance on scroll
-  const observerOptions = {
-    threshold: 0.1
-  };
-
+  // Smooth appearance on scroll (Intersection Observer)
+  const observerOptions = { threshold: 0.1 };
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -159,79 +191,10 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 /**
- * Featured Inventory
- * Fetches all cars from the database, randomly selects 3, and displays them in the featured grid.
+ * Logic for the Inventory page (filtering and list rendering).
+ * @param {HTMLElement} carGrid - The container element for the car list.
  */
-async function initFeaturedInventory() {
-  const featuredGrid = document.getElementById('featured-grid');
-  if (!featuredGrid) return;
-
-  try {
-    const allCars = await runQuery("SELECT * FROM cars");
-
-    if (allCars.length === 0) {
-      featuredGrid.innerHTML = '<p>No featured vehicles are available.</p>';
-      return;
-    }
-
-    // Select 3 random cars
-    const shuffled = allCars.sort(() => 0.5 - Math.random());
-    const featuredCars = shuffled.slice(0, 3);
-
-    featuredGrid.innerHTML = featuredCars.map(car => {
-      const displayPrice = car.status === 'Price Upon Request'
-        ? 'Price Upon Request'
-        : `$${Number(car.price).toLocaleString('en-US')}`;
-
-
-      const badges = ['New Arrival', 'Rare Find', 'Top Spec', 'Exquisite'];
-      // if car is older than 2005, only show "Classic" badge instead of "New Arrival"
-      switch (car.year) {
-        case car.year < 2005:
-          badges.length = 1; // Only "Classic" badge
-          badges[0] = 'Classic';
-          break;
-        case car.year >= 2020:
-          badges.length = 2; // "New Arrival" and one random badge
-          badges[0] = 'New Arrival';
-          break;
-      }
-      const badgeText = Math.random() < 0.5 ? badges[Math.floor(Math.random() * badges.length)] : '';
-
-      
-      return `
-        <div class="inventory-card">
-          <div class="card-image">
-            <img src="${car.image_path}" alt="${car.brand} ${car.model}" />
-            ${badgeText ? `<div class="card-badge">${badgeText}</div>` : ''}
-          </div>
-          <div class="card-content">
-            <div class="card-meta">${car.year} • ${car.brand.toUpperCase()}</div>
-            <h3>${car.model}</h3>
-            <p>${car.description || 'Experience the pinnacle of European engineering and performance.'}</p>
-            <div class="card-footer">
-              <span class="price">€{displayPrice}</span>
-              <a href="car-detail.html?id=${car.id}" class="btn-outline">Details</a>
-            </div>
-          </div>
-        </div>
-      `;
-    }).join('');
-
-  } catch (error) {
-    console.error('Failed to load featured inventory:', error);
-    featuredGrid.innerHTML = '<p>Check back soon for our latest arrivals.</p>';
-  }
-}
-
-// ─── Inventory Page  
-
-// Only run this code if on the inventory page
-const carGrid = document.getElementById('car-grid');
-
-if (carGrid) {
-
-  // Maps the filter button values to what's stored in the database
+async function initInventoryPage(carGrid) {
   const brandMap = {
     'mercedes': 'Mercedes-Benz',
     'bmw':      'BMW',
@@ -239,27 +202,23 @@ if (carGrid) {
     'porsche':  'Porsche'
   };
 
-  let allCars = []; //store all fetched cars here for filtering
-
-  /**
-   * Creates an HTML card for a single car
-   * @param {Object} car - The car object
-   * @returns {string} The HTML for the car card
-   */
+  let allCars = [];
 
   function createCarCard(car) {
     const displayPrice = car.status === 'Price Upon Request'
       ? 'Price Upon Request'
       : `$${Number(car.price).toLocaleString('en-US')}`;
 
+    const brandName = car.brand || 'Unknown';
+
     return `
-    <article class="vehicle-card" data-brand="${car.brand.toLowerCase().replace('-', '')}">
+    <article class="vehicle-card" data-brand="${brandName.toLowerCase().replace('-', '')}">
       <a href="car-detail.html?id=${car.id}">
-        <img src="${car.image_path}" alt="${car.year} ${car.brand} ${car.model}" />
+        <img src="${car.image_path}" alt="${car.year} ${brandName} ${car.model}" />
         <div class="vehicle-info">
           <div>
             <h2>${car.year} ${car.model}</h2>
-            <p>${car.brand}</p>
+            <p>${brandName}</p>
           </div>
           <div class="vehicle-meta">
             <strong>${displayPrice}</strong>
@@ -271,11 +230,6 @@ if (carGrid) {
   `;
   }
 
-  /**
-   * Shows the list of cars into the grid
-   * @param {Array} cars - The list of car objects to render
-   * @returns {void}
-   */
   function renderCars(cars) {
     if (cars.length === 0) {
       carGrid.innerHTML = '<p class="no-results">No vehicles were found.</p>';
@@ -284,83 +238,56 @@ if (carGrid) {
     carGrid.innerHTML = cars.map(createCarCard).join('');
   }
 
-  /**
-   * Loads all cars from the database and renders them, applying any filter from the URL if present.
-   * checks for a "filter" param in the url to pre-apply a brand filter and set the active butto.
-   */
   async function loadCars() {
     carGrid.innerHTML = '<p class="no-results">Loading vehicles...</p>';
 
     try {
-      // Check for filter in URL
-      const urlParams = new URLSearchParams(window.location.search); // e.g. ?filter=mercedes
+      const urlParams = new URLSearchParams(window.location.search);
       const filterParam = urlParams.get('filter')?.toLowerCase();
 
+      // Use the same query as CRUD
+      allCars = await runQuery("SELECT cars.id, cars.brandID, brands.BrandName AS brand, cars.model, cars.year, cars.price, cars.mileage, cars.image_path, cars.status FROM cars JOIN brands ON cars.brandID = brands.BrandId");
       
-      allCars = await runQuery("SELECT * FROM cars");
-      
-      // If there's a valid filter, apply it and set the active button
+      console.log("Inventory Page - Cars fetched:", allCars);
+
       if (filterParam && brandMap[filterParam]) {
-        // Set active button
         const filterButtons = document.querySelectorAll('.filter-button');
         filterButtons.forEach(btn => {
-          if (btn.dataset.filter === filterParam) {
-            btn.classList.add('active');
-          } else {
-            btn.classList.remove('active');
-          }
+          btn.classList.toggle('active', btn.dataset.filter === filterParam);
         });
 
-        // Render filtered cars
         const filtered = allCars.filter(car => car.brand === brandMap[filterParam]);
         renderCars(filtered);
       } else {
         renderCars(allCars);
       }
-    // error handling: if the API call fails, show a message and log the error
     } catch (error) {
       carGrid.innerHTML = '<p class="no-results">Failed to load vehicles.</p>';
-      console.error('API error:', error);
+      console.error('Inventory API error:', error);
     }
   }
 
-  // ── 4. Filter buttons ──
+  // Filter buttons logic
   const filterButtons = document.querySelectorAll('.filter-button');
-
   filterButtons.forEach(button => {
     button.addEventListener('click', () => {
       filterButtons.forEach(btn => btn.classList.remove('active'));
       button.classList.add('active');
 
       const filter = button.dataset.filter;
+      const url = new URL(window.location);
 
       if (filter === 'all') {
         renderCars(allCars);
-        // Update URL without reloading
-        const url = new URL(window.location);
         url.searchParams.delete('filter');
-        window.history.pushState({}, '', url);
       } else {
         const filtered = allCars.filter(car => car.brand === brandMap[filter]);
         renderCars(filtered);
-        // Update URL without reloading
-        const url = new URL(window.location);
         url.searchParams.set('filter', filter);
-        window.history.pushState({}, '', url);
       }
+      window.history.pushState({}, '', url);
     });
   });
 
-
   loadCars();
 }
-
-const metaTheme = document.querySelector('meta[name="theme-color"]');
-
-window.addEventListener('scroll', () => {
-  if (window.scrollY < 600) {
-    metaTheme.setAttribute('content', '#d0d0d0'); // hero section grey
-  } else {
-    metaTheme.setAttribute('content', '#ffffff'); // rest of site
-  }
-});

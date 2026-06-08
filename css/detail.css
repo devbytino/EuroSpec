@@ -1,6 +1,5 @@
 /* Car Detail Page Specific Styles */
 
-/* Header Overrides for Detail Page */
 .detail-header {
     background: transparent;
     border-bottom: none;
@@ -63,7 +62,7 @@
 }
 
 .hero-content h1 {
-    font-size: clamp(3rem, 10vw, 6rem);
+    font-size: clamp(3rem, 10vw, 6rem); /* for responsiveness*/
     margin: 0;
     font-family: "Helvetica", "Arial", sans-serif;
     font-weight: 700;
