@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Image — set src using the path from the database
     const carImage = document.getElementById('car-image');
     if (carImage) {
-        carImage.src = car.image_path;
+        carImage.src = car.image_path || 'assets/photos/amggt-placeholder.jpg';
         carImage.alt = fullTitle;
     }
 

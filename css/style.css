@@ -148,6 +148,7 @@ nav ul li a:hover {
   opacity: 0.7;
 }
 
+
 /* Mobile Nav Toggle */
 .mobile-nav-toggle {
   display: none;
@@ -671,7 +672,7 @@ footer {
   padding: 10px 20px;
   font-size: 1rem;
   font-family: "Helvetica", "Arial", sans-serif;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   margin-top: 20px;
   transition: background-color 0.3s ease;
@@ -1629,7 +1630,7 @@ footer {
 }
 
 @view-transition {
-  navigation: auto;
+  navigation: auto; /* transition between pages smoothly*/
 }
 
 .crud-container {

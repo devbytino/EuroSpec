@@ -23,6 +23,7 @@ async function runQuery(sql) {
       return result.data;          // Array met rijen
     } else {
       console.error("SQL fout in runQuery:", result.error);
+      alert("Er is een fout opgetreden bij het uitvoeren van de query: " + result.error);
       return FALLBACK_PRODUCTEN;   // Bij een fout: fallback data
     }
   } catch (fout) {
@@ -124,6 +125,7 @@ async function initFeaturedInventory() {
         : `$${Number(car.price).toLocaleString('en-US')}`;
 
       const brandName = car.brand || 'Unknown';
+      const imagePath = car.image_path || 'assets/photos/amggt-placeholder.jpg';
 
       const badges = ['New Arrival', 'Rare Find', 'Top Spec', 'Exquisite'];
       if (car.year < 2005) {
@@ -138,7 +140,7 @@ async function initFeaturedInventory() {
       return `
         <div class="inventory-card">
           <div class="card-image">
-            <img src="${car.image_path}" alt="${brandName} ${car.model}" />
+            <img src="${imagePath}" alt="${brandName} ${car.model}" />
             ${badgeText ? `<div class="card-badge">${badgeText}</div>` : ''}
           </div>
           <div class="card-content">
@@ -210,11 +212,12 @@ async function initInventoryPage(carGrid) {
       : `$${Number(car.price).toLocaleString('en-US')}`;
 
     const brandName = car.brand || 'Unknown';
+    const imagePath = car.image_path || 'assets/photos/amggt-placeholder.jpg';
 
     return `
     <article class="vehicle-card" data-brand="${brandName.toLowerCase().replace('-', '')}">
       <a href="car-detail.html?id=${car.id}">
-        <img src="${car.image_path}" alt="${car.year} ${brandName} ${car.model}" />
+        <img src="${imagePath}" alt="${car.year} ${brandName} ${car.model}" />
         <div class="vehicle-info">
           <div>
             <h2>${car.year} ${car.model}</h2>
@@ -246,7 +249,7 @@ async function initInventoryPage(carGrid) {
       const filterParam = urlParams.get('filter')?.toLowerCase();
 
       // Use the same query as CRUD
-      allCars = await runQuery("SELECT cars.id, cars.brandID, brands.BrandName AS brand, cars.model, cars.year, cars.price, cars.mileage, cars.image_path, cars.status FROM cars JOIN brands ON cars.brandID = brands.BrandId");
+      allCars = await runQuery("SELECT cars.id, cars.brandID, brands.BrandName AS brand, cars.model, cars.year, ROUND(cars.price * 1.21, 2) AS price, cars.mileage, cars.image_path, cars.status FROM cars JOIN brands ON cars.brandID = brands.BrandId");
       
       console.log("Inventory Page - Cars fetched:", allCars);
 

@@ -27,6 +27,11 @@
 .status-message {
     text-align: center;
     padding: 200px 0;
+    font-size: 1.5rem;
+    color: #fff;
+    font-family: "Helvetica", "Arial", sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.1em;
 }
 
 /* Hero Section */
