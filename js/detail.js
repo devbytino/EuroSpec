@@ -1,13 +1,14 @@
 /**
  * Car Detail page logic.
  * Fetches a single car's details based on the 'id' parameter in the URL.
+ *
  */
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  // ── 1. Read the car ID from the URL ──
-  const params = new URLSearchParams(window.location.search);
-  const carId = params.get('id');
+  //Read the car ID from the URL ──
+  const params = new URLSearchParams(window.location.search); // read url parameters
+  const carId = params.get('id'); // get the 'id' parameter
 
   const loadingEl = document.getElementById('loading');
   const errorEl   = document.getElementById('error');
@@ -20,10 +21,11 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  // ── 3. Fetch the car from the API using a JOIN ──
-  // We use a JOIN to get the BrandName even though the cars table only has brandID.
+  // Fetch the car from the API using a JOIN ──
+  //  JOIN to get the BrandName even though the cars table only has brandID.
   const sql = `SELECT cars.*, brands.BrandName AS brand FROM cars JOIN brands ON cars.brandID = brands.BrandId WHERE cars.id = ${carId}`;
-  const apiUrl = `api.php?sql=${encodeURIComponent(sql)}`;
+  const apiUrl = `api.php?sql=${encodeURIComponent(sql)}`; // sql injection not really safe, but we're using a trusted source, so it is what it is
+  
 
   fetch(apiUrl)
       .then(res => res.json())
@@ -39,7 +41,9 @@ document.addEventListener('DOMContentLoaded', () => {
       .catch((err) => {
         console.error(err);
         // Fallback check
-        const fallbackCar = typeof FALLBACK_PRODUCTEN !== 'undefined' ? FALLBACK_PRODUCTEN.find(c => c.id == carId) : null;
+        const fallbackCar = typeof FALLBACK_PRODUCTEN !== 'undefined'
+            ? FALLBACK_PRODUCTEN.find(c => c.id == carId)  // loop through the fallback array and find the car with the matching ID
+            : null; // if fallback array is not defined, return null
         if (fallbackCar) {
           renderCar(fallbackCar);
         } else {
@@ -55,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
    * @param {Object} car - The car data from the database.
    */
   function renderCar(car) {
-    if (!car) return;
+    if (!car) return; // If car is undefined or null, return early
     const brandName = car.brand || 'Unknown';
     const fullTitle = `${car.year} ${brandName} ${car.model}`;
     
@@ -67,12 +71,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (priceEl) {
       priceEl.textContent = car.status === 'Price Upon Request'
           ? 'Price Upon Request'
-          : `$${Number(Math.floor(car.price * 1.21)).toLocaleString('en-US')} Incl. VAT`;
+          : `$${Number(Math.floor(car.price * 1.21)).toLocaleString('en-US')} Incl. VAT`; // 21% VAT and use toLocaleString to format the price
     }
 
-    // Specs Section
+    // Specs Section - create an element for each spec and set text content
     const yearBrandEl = document.getElementById('car-year-brand');
-    if (yearBrandEl) yearBrandEl.textContent = `${car.year} ${brandName}`;
+    if (yearBrandEl) yearBrandEl.textContent = `${car.year} ${brandName}`; // if brandName exists, use it, otherwise use 'Unknown'
 
     const modelNameEl = document.getElementById('car-model-name');
     if (modelNameEl) modelNameEl.textContent = car.model;
@@ -98,14 +102,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Image — set src using the path from the database
     const carImage = document.getElementById('car-image');
     if (carImage) {
-        carImage.src = car.image_path || 'assets/photos/amggt-placeholder.jpg';
-        carImage.alt = fullTitle;
+        carImage.src = car.image_path || 'assets/photos/amggt-placeholder.jpg'; // Fallback placeholder
+        carImage.alt = fullTitle; // Set alt text to the full title - always use the full title for accessibility
     }
 
     // Show content, hide loading
     if (loadingEl) loadingEl.style.display = 'none';
     if (contentEl) contentEl.style.display = 'block';
 
-    document.title = `${fullTitle} | EuroSpec`;
+    document.title = `${fullTitle} | EuroSpec`; // Set the page title
   }
 });

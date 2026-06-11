@@ -15,7 +15,7 @@
   --btn-text: #000000;
   --input-border: rgba(255, 255, 255, 0.1);
 }
-
+/* use the custom data-theme attribute which was injected by the javascript function initTheme() */
 [data-theme="light"] {
   --bg-color: #ffffff;
   --text-color: #0A0A0A;
@@ -1392,7 +1392,7 @@ footer {
 }
 
 [data-theme="light"] {
-  --map-brightness: 1.1;
+  --map-brightness: 1;
   --map-hover-brightness: 1.2;
 }
 
@@ -1631,26 +1631,7 @@ footer {
 @view-transition {
   navigation: auto; /* transition between pages smoothly*/
 }
-::view-transition-group(root) {
-  animation-duration: 1s;
-  animation-timing-function: ease;
-}
-::view-transition-old(root) {
-  animation-name: slide-out;
-}
-::view-transition-new(root){
-  animation-name: slide-in;
-}
-@keyframes slide-out {
-  to {
-    transform: translate(-100vw);
-  }
-}
-@keyframes slide-in {
-  from {
-    transform: translate(100vw);
-  }
-}
+
 .crud-container {
   max-width: 1200px;
   margin: 120px auto 60px;

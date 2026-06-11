@@ -113,6 +113,8 @@ function updateLogos(theme) {
 
 /**
  * Initializes theme based on preference and sets up a toggle listener.
+ * Will use 'light' if the user prefers light mode, otherwise 'dark'.
+ * Will basically add the custom 'data-theme' attribute to the HTML element, which is used by CSS to change styles.
  */
 function initTheme() {
   const themeToggle = document.querySelector('.theme-toggle');
@@ -181,17 +183,17 @@ async function initFeaturedInventory() {
     }
 
     // Select 3 random cars
-    const shuffled = [...allCars].sort(() => 0.5 - Math.random());
-    const featuredCars = shuffled.slice(0, 3);
+    const shuffled = [...allCars].sort(() => 0.5 - Math.random()); // first create a copy of the array (immutability) and shuffle it
+    const featuredCars = shuffled.slice(0, 3); // take the first 3 elements for featured cars
 
-    featuredGrid.innerHTML = featuredCars.map(car => {
+    featuredGrid.innerHTML = featuredCars.map(car => { // take featured cars and render them
       const displayPrice = car.status === 'Price Upon Request'
         ? 'Price Upon Request'
-        : `$${Number(car.price).toLocaleString('en-US')}`;
+        : `$${Number(car.price).toLocaleString('en-US')}`; // ternary operator for price display
 
       const brandName = car.brand || 'Unknown';
-      const imagePath = car.image_path || 'assets/photos/amggt-placeholder.jpg';
-
+      const imagePath = car.image_path || 'assets/photos/fallback.png'; // fallback image
+      // adjust based on year
       const badges = ['New Arrival', 'Rare Find', 'Top Spec', 'Exquisite'];
       if (car.year < 2005) {
           badges.length = 1;
@@ -219,17 +221,15 @@ async function initFeaturedInventory() {
           </div>
         </div>
       `;
-    }).join('');
+    }).join(''); // join the array of HTML strings into a single string
 
-  } catch (error) {
+  } catch (error) { // error handling
     console.error('Failed to load featured inventory:', error);
     featuredGrid.innerHTML = '<p>Check back soon for our latest arrivals.</p>';
   }
 }
 
-/**
- * Main initialization on DOM content loaded.
- */
+// initialize on page load
 window.addEventListener('DOMContentLoaded', () => {
   initTheme();
   initMobileNav();
@@ -263,13 +263,13 @@ window.addEventListener('DOMContentLoaded', () => {
  */
 async function initInventoryPage(carGrid) {
   const brandMap = {
-    'mercedes': 'Mercedes-Benz',
+    'mercedes': 'Mercedes-Benz', // Corrected key name so that SQL does not clash with the API
     'bmw':      'BMW',
     'audi':     'Audi',
     'porsche':  'Porsche'
   };
 
-  let allCars = [];
+  let allCars = []; // once the data is fetched, it will be stored here, no need to fetch it again like if I used a const
 
   function createCarCard(car) {
     const displayPrice = car.status === 'Price Upon Request'
@@ -277,7 +277,7 @@ async function initInventoryPage(carGrid) {
       : `$${Number(car.price).toLocaleString('en-US')}`;
 
     const brandName = car.brand || 'Unknown';
-    const imagePath = car.image_path || 'assets/photos/amggt-placeholder.jpg';
+    const imagePath = car.image_path || 'assets/photos/fallback.png';
 
     return `
     <article class="vehicle-card" data-brand="${brandName.toLowerCase().replace('-', '')}">
@@ -299,61 +299,61 @@ async function initInventoryPage(carGrid) {
   }
 
   function renderCars(cars) {
-    if (cars.length === 0) {
+    if (cars.length === 0) { // if there are no cars, show a message instead of causing an error
       carGrid.innerHTML = '<p class="no-results">No vehicles were found.</p>';
       return;
     }
-    carGrid.innerHTML = cars.map(createCarCard).join('');
+    carGrid.innerHTML = cars.map(createCarCard).join(''); // loop through cars and create HTML for each and combine them into a single string and put in the carGrid
   }
 
   async function loadCars() {
-    carGrid.innerHTML = '<p class="no-results">Loading vehicles...</p>';
+    carGrid.innerHTML = '<p class="no-results">Loading vehicles...</p>'; // show loading message for ux
 
     try {
-      const urlParams = new URLSearchParams(window.location.search);
-      const filterParam = urlParams.get('filter')?.toLowerCase();
+      const urlParams = new URLSearchParams(window.location.search); // get the filter from the URL
+      const filterParam = urlParams.get('filter')?.toLowerCase(); // check if the user has selected a filter
 
-      // Use the same query as CRUD
+      // Use the same query as CRUD, but with a JOIN to get the brand name. Price inclusive of 21% VAT.
       allCars = await runQuery("SELECT cars.id, cars.brandID, brands.BrandName AS brand, cars.model, cars.year, ROUND(cars.price * 1.21, 2) AS price, cars.mileage, cars.image_path, cars.status FROM cars JOIN brands ON cars.brandID = brands.BrandId");
       
-      console.log("Inventory Page - Cars fetched:", allCars);
+      console.log("Inventory Page - Cars fetched:", allCars); // log the fetched cars
 
       if (filterParam && brandMap[filterParam]) {
-        const filterButtons = document.querySelectorAll('.filter-button');
-        filterButtons.forEach(btn => {
+        const filterButtons = document.querySelectorAll('.filter-button'); // select all filter buttons
+        filterButtons.forEach(btn => { // loop through each button and toggle the active class based on the filter
           btn.classList.toggle('active', btn.dataset.filter === filterParam);
         });
 
-        const filtered = allCars.filter(car => car.brand === brandMap[filterParam]);
+        const filtered = allCars.filter(car => car.brand === brandMap[filterParam]); // filter cars based on the selected filter
         renderCars(filtered);
       } else {
         renderCars(allCars);
       }
-    } catch (error) {
+    } catch (error) { // error handling
       carGrid.innerHTML = '<p class="no-results">Failed to load vehicles.</p>';
       console.error('Inventory API error:', error);
     }
   }
 
   // Filter buttons
-  const filterButtons = document.querySelectorAll('.filter-button');
-  filterButtons.forEach(button => {
-    button.addEventListener('click', () => {
+  const filterButtons = document.querySelectorAll('.filter-button'); // filter buttons
+  filterButtons.forEach(button => { // loop through each button and add a click event listener
+    button.addEventListener('click', () => { // when the button is clicked, toggle the remove active class from all buttons and add it to the clicked button
       filterButtons.forEach(btn => btn.classList.remove('active'));
       button.classList.add('active');
 
       const filter = button.dataset.filter;
       const url = new URL(window.location);
 
-      if (filter === 'all') {
+      if (filter === 'all') { // if the filter is 'all', show all cars
         renderCars(allCars);
-        url.searchParams.delete('filter');
+        url.searchParams.delete('filter'); //  remove the filter from the URL
       } else {
         const filtered = allCars.filter(car => car.brand === brandMap[filter]);
         renderCars(filtered);
         url.searchParams.set('filter', filter);
       }
-      window.history.pushState({}, '', url);
+      window.history.pushState({}, '', url); // update the URL with the new filter without reloading the page good 4 speed
     });
   });
 
