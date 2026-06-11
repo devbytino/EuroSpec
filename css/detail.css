@@ -34,6 +34,10 @@
     letter-spacing: -0.1em;
 }
 
+#error, #car-content {
+    display: none;
+}
+
 /* Hero Section */
 .car-hero-full {
     position: relative;
