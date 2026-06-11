@@ -101,7 +101,7 @@ The `api.php` file in this project is built for **educational purposes**. It all
 Want to keep learning? Try adding these:
 1.  **Search Bar**: Add an input field that filters cars as you type.
 2.  **Favorites**: Use `localStorage` to let users "heart" a car and save it to a "My Garage" page.
-3.  **Price Formatter**: Use `Intl.NumberFormat` in JS to turn `1850000` into `$1,850,000`.
+3.  **Price Formatter**: Use `Intl.NumberFormat` in JS to turn `1850000` into `€1,850,000`.
 
 ---
 *Created for the EuroSpec Final Project. Happy Coding!* 🚀

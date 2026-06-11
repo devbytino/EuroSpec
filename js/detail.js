@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (priceEl) {
       priceEl.textContent = car.status === 'Price Upon Request'
           ? 'Price Upon Request'
-          : `$${Number(Math.floor(car.price * 1.21)).toLocaleString('en-US')} Incl. VAT`; // 21% VAT and use toLocaleString to format the price
+          : `€${Number(Math.floor(car.price * 1.21)).toLocaleString('en-US')} Incl. VAT`; // 21% VAT and use toLocaleString to format the price
     }
 
     // Specs Section - create an element for each spec and set text content

@@ -1,47 +1,47 @@
 <?php
 // api.php
-// Een zeer eenvoudige API. Ontvangt een SQL-string en voert die uit.
-// LET OP: dit is alleen voor de les / om te leren. NIET voor een echte website
-// gebruiken: zomaar elke SQL uitvoeren is onveilig (SQL injection).
+// A very simple API. Receives a SQL string and executes it.
+// NOTE: this is only for educational purposes. DO NOT use this for a real website
+// as executing any SQL directly is insecure (SQL injection).
 
-// Headers: we sturen JSON terug en staan requests vanaf elke pagina toe
+// Headers: we return JSON and allow requests from any page
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 
-// --- 1. Connectie maken met de database ---
+// --- 1. Database Connection ---
 $host = 'localhost';
-$gebruiker = 'root';
-$wachtwoord = '';      // Standaard leeg bij XAMPP
+$user = 'root';
+$password = '';      // Default empty in XAMPP
 $database = 'eurospec';
 
-$conn = new mysqli($host, $gebruiker, $wachtwoord, $database);
+$conn = new mysqli($host, $user, $password, $database);
 
-// Lukte de connectie niet? Stuur een foutmelding terug en stop.
+// Connection failed? Return an error and stop.
 if ($conn->connect_error) {
     echo json_encode([
         'success' => false,
-        'error' => 'Connectie mislukt: ' . $conn->connect_error
+        'error' => 'Connection failed: ' . $conn->connect_error
     ]);
     exit;
 }
 
-// --- 2. De SQL-string ophalen ---
-// De query komt mee als parameter, bijvoorbeeld:  api.php?sql=SELECT * FROM product
+// --- 2. Retrieve SQL String ---
+// The query comes as a parameter, e.g.: api.php?sql=SELECT * FROM product
 $sql = $_REQUEST['sql'] ?? '';
 
 if ($sql === '') {
     echo json_encode([
         'success' => false,
-        'error' => 'Geen SQL meegegeven'
+        'error' => 'No SQL provided'
     ]);
     exit;
 }
 
-// --- 3. De query uitvoeren ---
-$resultaat = $conn->query($sql);
+// --- 3. Execute Query ---
+$result = $conn->query($sql);
 
-// Ging er iets fout met de query?
-if ($resultaat === false) {
+// Query error?
+if ($result === false) {
     echo json_encode([
         'success' => false,
         'error' => $conn->error
@@ -49,22 +49,22 @@ if ($resultaat === false) {
     exit;
 }
 
-// --- 4. Het resultaat terugsturen ---
-if ($resultaat === true) {
-    // De query was een INSERT, UPDATE of DELETE (geen rijen om terug te geven)
+// --- 4. Return Results ---
+if ($result === true) {
+    // Query was INSERT, UPDATE, or DELETE (no rows to return)
     echo json_encode([
         'success' => true,
         'data' => []
     ]);
 } else {
-    // De query was een SELECT: rijen omzetten naar een array
-    $rijen = [];
-    while ($rij = $resultaat->fetch_assoc()) {
-        $rijen[] = $rij;
+    // Query was SELECT: convert rows to an array
+    $rows = [];
+    while ($row = $result->fetch_assoc()) {
+        $rows[] = $row;
     }
     echo json_encode([
         'success' => true,
-        'data' => $rijen
+        'data' => $rows
     ]);
 }
 

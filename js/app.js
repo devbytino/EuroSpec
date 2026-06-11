@@ -69,6 +69,54 @@ const FALLBACK_PRODUCTEN = [
     image_path: 'assets/CarImages/porsche/2018-gt2rs.png',
     status: 'Price Upon Request',
     description: 'The most powerful 911 ever built for the road. The GT2 RS is a track-focused monster pushing the boundaries of physics.'
+  },
+  {
+    id: 5,
+    brandID: 3,
+    brand: 'Audi',
+    model: 'Sport Quattro',
+    year: 1984,
+    price: 450000,
+    mileage: 32000,
+    engine: '2.1L Turbocharged 5-Cylinder',
+    transmission: '5-Speed Manual',
+    power: '302 hp',
+    top_speed: '250 km/h',
+    image_path: 'assets/CarImages/audi/audi-sport-quattro.png',
+    status: 'Available',
+    description: 'A Group B rally legend. The Sport Quattro is the ultimate expression of Audi\'s "Vorsprung durch Technik" from the 1980s.'
+  },
+  {
+    id: 6,
+    brandID: 2,
+    brand: 'BMW',
+    model: 'M5 (E39)',
+    year: 1996,
+    price: 85000,
+    mileage: 72000,
+    engine: '4.9L V8',
+    transmission: '6-Speed Manual',
+    power: '394 hp',
+    top_speed: '250 km/h',
+    image_path: 'assets/CarImages/bmw/1996-m5.png',
+    status: 'Available',
+    description: 'Widely regarded as the finest sports sedan ever made. The E39 M5 offers a perfect balance of luxury and raw performance.'
+  },
+  {
+    id: 7,
+    brandID: 1,
+    brand: 'Mercedes-Benz',
+    model: 'SLR McLaren',
+    year: 2003,
+    price: 420000,
+    mileage: 12000,
+    engine: '5.4L Supercharged V8',
+    transmission: '5-Speed Automatic',
+    power: '617 hp',
+    top_speed: '334 km/h',
+    image_path: 'assets/CarImages/mercedes/slr-mclaren.png',
+    status: 'Price Upon Request',
+    description: 'A collaboration between two giants of motorsport. The SLR McLaren is a long-distance grand tourer with supercar performance.'
   }
 ];
 
@@ -87,12 +135,12 @@ async function runQuery(sql) {
     if (result.success) {
       return result.data;
     } else {
-      console.error("SQL fout in runQuery:", result.error);
-      alert("Er is een fout opgetreden bij het uitvoeren van de query: " + result.error);
+      console.error("SQL error in runQuery:", result.error);
+      alert("An error occurred while executing the query: " + result.error);
       return FALLBACK_PRODUCTEN;
     }
-  } catch (fout) {
-    console.error("API niet bereikbaar in runQuery:", fout);
+  } catch (error) {
+    console.error("API unreachable in runQuery:", error);
     return FALLBACK_PRODUCTEN;
   }
 }
@@ -173,7 +221,8 @@ async function initFeaturedInventory() {
 
   try {
     // Using specific column names instead of SELECT *
-    const allCars = await runQuery("SELECT cars.id, cars.brandID, brands.BrandName AS brand, cars.model, cars.year, cars.price, cars.image_path, cars.status, cars.description FROM cars JOIN brands ON cars.brandID = brands.BrandId");
+    // Added ROUND(cars.price * 1.21, 2) to include 21% VAT
+    const allCars = await runQuery("SELECT cars.id, cars.brandID, brands.BrandName AS brand, cars.model, cars.year, ROUND(cars.price * 1.21, 2) AS price, cars.image_path, cars.status, cars.description FROM cars JOIN brands ON cars.brandID = brands.BrandId");
 
     console.log("Featured Inventory - Cars fetched:", allCars);
 
@@ -189,7 +238,7 @@ async function initFeaturedInventory() {
     featuredGrid.innerHTML = featuredCars.map(car => { // take featured cars and render them
       const displayPrice = car.status === 'Price Upon Request'
         ? 'Price Upon Request'
-        : `$${Number(car.price).toLocaleString('en-US')}`; // ternary operator for price display
+        : `€${Number(car.price).toLocaleString('en-US')}`; // ternary operator for price display
 
       const brandName = car.brand || 'Unknown';
       const imagePath = car.image_path || 'assets/photos/fallback.png'; // fallback image
@@ -274,7 +323,7 @@ async function initInventoryPage(carGrid) {
   function createCarCard(car) {
     const displayPrice = car.status === 'Price Upon Request'
       ? 'Price Upon Request'
-      : `$${Number(car.price).toLocaleString('en-US')}`;
+      : `€${Number(car.price).toLocaleString('en-US')}`;
 
     const brandName = car.brand || 'Unknown';
     const imagePath = car.image_path || 'assets/photos/fallback.png';

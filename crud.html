@@ -144,11 +144,11 @@
             if (typeof initMobileNav === 'function') initMobileNav();
 
             // Bind buttons
-            document.getElementById("opslaanKnop").addEventListener("click", productOpslaan);
-            document.getElementById("annuleerKnop").addEventListener("click", formulierLeegmaken);
+            document.getElementById("opslaanKnop").addEventListener("click", saveProduct);
+            document.getElementById("annuleerKnop").addEventListener("click", clearForm);
 
             // Load list
-            toonBeheerLijst();
+            renderAdminList();
         });
     </script>
 </body>

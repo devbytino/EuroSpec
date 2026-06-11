@@ -6,19 +6,18 @@
 /**
  * READ: Fetches all cars from the database with their brand names and displays them in a list.
  * Uses a SQL JOIN to combine 'cars' and 'brands' tables.
- * This was generated with AI but heavily modified by me to fit the needs of the project and to add extra fields.
  * @async
  * @returns {Promise<void>}
  */
-async function toonBeheerLijst() {
+async function renderAdminList() {
     // SELECT: we ask for columns from 'cars' and the 'BrandName' from 'brands'.
     // JOIN: we link the tables where brandID (in cars) matches BrandId (in brands).
-    const producten = await runQuery("SELECT cars.id, cars.brandID, brands.BrandName AS brand, cars.model, cars.year, cars.price, cars.image_path, cars.transmission, cars.power, cars.description, cars.engine, cars.top_speed, cars.mileage FROM cars JOIN brands ON cars.brandID = brands.BrandId");
+    const products = await runQuery("SELECT cars.id, cars.brandID, brands.BrandName AS brand, cars.model, cars.year, cars.price, cars.image_path, cars.transmission, cars.power, cars.description, cars.engine, cars.top_speed, cars.mileage FROM cars JOIN brands ON cars.brandID = brands.BrandId");
 
-    const lijst = document.getElementById("carList");
-    lijst.innerHTML = "";   // Clear the list before adding items
+    const list = document.getElementById("carList");
+    list.innerHTML = "";   // Clear the list before adding items
 
-    for (const product of producten) {
+    for (const product of products) {
         const item = document.createElement("li");
         item.style.display = "flex";
         item.style.alignItems = "center";
@@ -38,10 +37,10 @@ async function toonBeheerLijst() {
         // Container for text content
         const info = document.createElement("div");
         info.style.flex = "1";
-        const tekst = document.createTextNode(
+        const text = document.createTextNode(
             product.year + " " + product.brand + " " + product.model + " - \u20ac" + Number(product.price).toLocaleString('en-US')
         );
-        info.appendChild(tekst);
+        info.appendChild(text);
         item.appendChild(info);
 
         // Button group
@@ -50,40 +49,40 @@ async function toonBeheerLijst() {
         buttonGroup.style.margin = "0";
 
         // Edit Button
-        const bewerkKnop = document.createElement("button");
-        bewerkKnop.textContent = "Bewerken";
-        bewerkKnop.className = "btn-secondary";
-        bewerkKnop.style.padding = "4px 8px";
-        bewerkKnop.style.fontSize = "0.8rem";
-        bewerkKnop.addEventListener("click", function () {
-            formulierVullen(product);
+        const editButton = document.createElement("button");
+        editButton.textContent = "Edit";
+        editButton.className = "btn-secondary";
+        editButton.style.padding = "4px 8px";
+        editButton.style.fontSize = "0.8rem";
+        editButton.addEventListener("click", function () {
+            fillForm(product);
         });
-        buttonGroup.appendChild(bewerkKnop);
+        buttonGroup.appendChild(editButton);
 
         // Delete Button
-        const verwijderKnop = document.createElement("button");
-        verwijderKnop.textContent = "Verwijderen";
-        verwijderKnop.className = "btn-secondary";
-        verwijderKnop.style.padding = "4px 8px";
-        verwijderKnop.style.fontSize = "0.8rem";
-        verwijderKnop.style.color = "#ff4444";
-        verwijderKnop.addEventListener("click", function () {
-            productVerwijderen(product.id);
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete";
+        deleteButton.className = "btn-secondary";
+        deleteButton.style.padding = "4px 8px";
+        deleteButton.style.fontSize = "0.8rem";
+        deleteButton.style.color = "#ff4444";
+        deleteButton.addEventListener("click", function () {
+            deleteProduct(product.id);
         });
-        buttonGroup.appendChild(verwijderKnop);
+        buttonGroup.appendChild(deleteButton);
 
         item.appendChild(buttonGroup);
-        lijst.appendChild(item);
+        list.appendChild(item);
     }
 }
 
 /**
  * Populates the HTML form fields with data from a specific car object.
- * Used when the user clicks the "Bewerken" (Edit) button.
+ * Used when the user clicks the "Edit" button.
  * 
  * @param {Object} product - The car object containing data to fill.
  */
-function formulierVullen(product) {
+function fillForm(product) {
     document.getElementById("productId").value = product.id;
     document.getElementById("brandID").value = product.brandID;
     document.getElementById("model").value = product.model;
@@ -103,7 +102,7 @@ function formulierVullen(product) {
  * Clears all input fields in the management form.
  * Used after saving a product or when the user cancels editing.
  */
-function formulierLeegmaken() {
+function clearForm() {
     document.getElementById("productId").value = "";
     document.getElementById("brandID").value = "";
     document.getElementById("model").value = "";
@@ -126,7 +125,7 @@ function formulierLeegmaken() {
  * @async
  * @returns {Promise<void>}
  */
-async function productOpslaan() {
+async function saveProduct() {
     // Get values from the form inputs
     const id = document.getElementById("productId").value;
     const brandID = document.getElementById("brandID").value;
@@ -144,7 +143,7 @@ async function productOpslaan() {
 
     // Basic validation
     if (!brandID || !model || !year || !price) {
-        alert("Vul a.u.b. alle verplichte velden in (Merk, Model, Jaar, Prijs).");
+        alert("Please fill in all mandatory fields (Brand, Model, Year, Price).");
         return;
     }
 
@@ -173,12 +172,9 @@ async function productOpslaan() {
 
     const result = await runQuery(sql);
 
-    // Check if runQuery returned the fallback data (empty array) which usually indicates failure for non-SELECTs 
-    // unless we change runQuery to be more specific. But for now, we'll assume it worked if no alert from runQuery itself.
-
     // Refresh UI: clear form and reload the list
-    formulierLeegmaken();
-    toonBeheerLijst();
+    clearForm();
+    renderAdminList();
 }
 
 
@@ -189,10 +185,10 @@ async function productOpslaan() {
  * @param {number|string} id - The unique ID of the car to delete.
  * @returns {Promise<void>}
  */
-async function productVerwijderen(id) {
+async function deleteProduct(id) {
     // Ask for confirmation to prevent accidental deletions
-    const zeker = confirm("Weet je zeker dat je dit product wilt verwijderen?");
-    if (!zeker) {
+    const confirmed = confirm("Are you sure you want to delete this product?");
+    if (!confirmed) {
         return;
     }
 
@@ -200,5 +196,5 @@ async function productVerwijderen(id) {
     await runQuery("DELETE FROM cars WHERE id = " + id);
 
     // Refresh the list to show the item is gone
-    toonBeheerLijst();
+    renderAdminList();
 }
