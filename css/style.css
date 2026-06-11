@@ -1631,7 +1631,26 @@ footer {
 @view-transition {
   navigation: auto; /* transition between pages smoothly*/
 }
-
+::view-transition-group(root) {
+  animation-duration: 1s;
+  animation-timing-function: ease;
+}
+::view-transition-old(root) {
+  animation-name: slide-out;
+}
+::view-transition-new(root){
+  animation-name: slide-in;
+}
+@keyframes slide-out {
+  to {
+    transform: translate(-100vw);
+  }
+}
+@keyframes slide-in {
+  from {
+    transform: translate(100vw);
+  }
+}
 .crud-container {
   max-width: 1200px;
   margin: 120px auto 60px;

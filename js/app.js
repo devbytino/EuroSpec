@@ -1,11 +1,76 @@
 /**
  * API_URL: the address of the API to which we send our SQL queries.
- * We use a relative path so it works regardless of your local folder name.
+ * We use a relative path, so it works regardless of your local folder name.
  */
 const API_URL = "api.php";
 
-// Fallback data: empty array to prevent crashes if the API is down
-const FALLBACK_PRODUCTEN = [];
+// Fallback data: populated to prevent crashes and show preview cars if the API is down
+const FALLBACK_PRODUCTEN = [
+  {
+    id: 1,
+    brandID: 1,
+    brand: 'Audi',
+    model: 'R8 V10',
+    year: 2020,
+    price: 150000,
+    mileage: 15000,
+    engine: '5.2L V10',
+    transmission: '7-Speed Automatic',
+    power: '602 hp',
+    top_speed: '330 km/h',
+    image_path: 'assets/CarImages/audi/2020-audi-r8v10.png',
+    status: 'Available',
+    description: 'A stunning combination of breathtaking performance and everyday usability. The Audi R8 V10 represents the pinnacle of Audi Sport.'
+  },
+  {
+    id: 2,
+    brandID: 2,
+    brand: 'BMW',
+    model: 'M3 GT',
+    year: 1994,
+    price: 125000,
+    mileage: 65000,
+    engine: '3.0L Inline-6',
+    transmission: '5-Speed Manual',
+    power: '295 hp',
+    top_speed: '275 km/h',
+    image_path: 'assets/CarImages/bmw/1994-m3gt.png',
+    status: 'Available',
+    description: 'An iconic piece of BMW M history. This E36 M3 GT is one of the rare homologation specials built in limited numbers.'
+  },
+  {
+    id: 3,
+    brandID: 3,
+    brand: 'Mercedes-Benz',
+    model: 'G63 AMG',
+    year: 2022,
+    price: 180000,
+    mileage: 8000,
+    engine: '4.0L V8 Biturbo',
+    transmission: '9-Speed Automatic',
+    power: '577 hp',
+    top_speed: '220 km/h',
+    image_path: 'assets/CarImages/mercedes/g63.png',
+    status: 'Available',
+    description: 'The ultimate luxury off-roader. The G63 AMG blends unmistakable design with formidable power and a handcrafted interior.'
+  },
+  {
+    id: 4,
+    brandID: 4,
+    brand: 'Porsche',
+    model: '911 GT2 RS',
+    year: 2018,
+    price: 350000,
+    mileage: 4500,
+    engine: '3.8L Twin-Turbo Flat-6',
+    transmission: '7-Speed PDK',
+    power: '700 hp',
+    top_speed: '340 km/h',
+    image_path: 'assets/CarImages/porsche/2018-gt2rs.png',
+    status: 'Price Upon Request',
+    description: 'The most powerful 911 ever built for the road. The GT2 RS is a track-focused monster pushing the boundaries of physics.'
+  }
+];
 
 /**
  * Sends an SQL string to the API and returns the result.
@@ -20,11 +85,11 @@ async function runQuery(sql) {
     const result = await response.json();
 
     if (result.success) {
-      return result.data;          // Array met rijen
+      return result.data;
     } else {
       console.error("SQL fout in runQuery:", result.error);
       alert("Er is een fout opgetreden bij het uitvoeren van de query: " + result.error);
-      return FALLBACK_PRODUCTEN;   // Bij een fout: fallback data
+      return FALLBACK_PRODUCTEN;
     }
   } catch (fout) {
     console.error("API niet bereikbaar in runQuery:", fout);
@@ -47,7 +112,7 @@ function updateLogos(theme) {
 }
 
 /**
- * Initialises theme based on preference and sets up toggle listener.
+ * Initializes theme based on preference and sets up a toggle listener.
  */
 function initTheme() {
   const themeToggle = document.querySelector('.theme-toggle');
@@ -270,7 +335,7 @@ async function initInventoryPage(carGrid) {
     }
   }
 
-  // Filter buttons logic
+  // Filter buttons
   const filterButtons = document.querySelectorAll('.filter-button');
   filterButtons.forEach(button => {
     button.addEventListener('click', () => {

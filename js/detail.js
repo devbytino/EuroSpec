@@ -38,8 +38,14 @@ document.addEventListener('DOMContentLoaded', () => {
       })
       .catch((err) => {
         console.error(err);
-        if (loadingEl) loadingEl.style.display = 'none';
-        if (errorEl) errorEl.style.display   = 'block';
+        // Fallback check
+        const fallbackCar = typeof FALLBACK_PRODUCTEN !== 'undefined' ? FALLBACK_PRODUCTEN.find(c => c.id == carId) : null;
+        if (fallbackCar) {
+          renderCar(fallbackCar);
+        } else {
+          if (loadingEl) loadingEl.style.display = 'none';
+          if (errorEl) errorEl.style.display   = 'block';
+        }
       });
 
   /**
@@ -59,9 +65,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const priceEl = document.getElementById('car-price');
     if (priceEl) {
-        priceEl.textContent = car.status === 'Price Upon Request'
-            ? 'Price Upon Request'
-            : `$${Number(car.price).toLocaleString('en-US')}`;
+      priceEl.textContent = car.status === 'Price Upon Request'
+          ? 'Price Upon Request'
+          : `$${Number(Math.floor(car.price * 1.21)).toLocaleString('en-US')} Incl. VAT`;
     }
 
     // Specs Section
