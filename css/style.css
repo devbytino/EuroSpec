@@ -93,8 +93,7 @@ header {
   z-index: 1000;
   top: 0;
   color: var(--text-color);
-  padding: 1.5em;
-  padding-top: calc(1.5em + env(safe-area-inset-top));
+  padding: calc(1.5em + env(safe-area-inset-top)) 1.5em 1.5em;
   display: flex;
   align-items: center;
   justify-content: space-between;

@@ -105,7 +105,7 @@ async function initFeaturedInventory() {
   if (!featuredGrid) return;
 
   try {
-    // Using specific column names for better compatibility
+    // Using specific column names instead of SELECT *
     const allCars = await runQuery("SELECT cars.id, cars.brandID, brands.BrandName AS brand, cars.model, cars.year, cars.price, cars.image_path, cars.status, cars.description FROM cars JOIN brands ON cars.brandID = brands.BrandId");
 
     console.log("Featured Inventory - Cars fetched:", allCars);
