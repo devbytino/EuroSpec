@@ -1,6 +1,7 @@
 /**
- * CRUD functions for managing cars (Create, Read, Update, Delete).
- * This script interacts with the 'cars' and 'brands' tables in the database.
+ * @file crud.js
+ * @description Administrative functions for managing the car inventory.
+ * Provides Create, Read, Update, and Delete (CRUD) operations via the API.
  */
 
 /**

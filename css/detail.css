@@ -219,7 +219,7 @@
         font-size: 1rem;
     }
 }
-@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce) { /* If user prefers reduced motion dont move the scroll indicator*/
     .scroll-indicator {
         animation: none;
     }

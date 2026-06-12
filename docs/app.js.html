@@ -27,13 +27,131 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
+ * @file app.js
+ * @description Main application logic for EuroSpec. Handles theme initialization, 
+ * mobile navigation, and inventory display on the home and inventory pages.
+ */
+
+/**
  * API_URL: the address of the API to which we send our SQL queries.
- * We use a relative path so it works regardless of your local folder name.
  */
 const API_URL = "api.php";
 
-// Fallback data: empty array to prevent crashes if the API is down
-const FALLBACK_PRODUCTEN = [];
+// Fallback data: populated to prevent crashes and show preview cars if the API is down
+const FALLBACK_PRODUCTEN = [
+  {
+    id: 1,
+    brandID: 1,
+    brand: 'Audi',
+    model: 'R8 V10',
+    year: 2020,
+    price: 150000,
+    mileage: 15000,
+    engine: '5.2L V10',
+    transmission: '7-Speed Automatic',
+    power: '602 hp',
+    top_speed: '330 km/h',
+    image_path: 'assets/CarImages/audi/2020-audi-r8v10.png',
+    status: 'Available',
+    description: 'A stunning combination of breathtaking performance and everyday usability. The Audi R8 V10 represents the pinnacle of Audi Sport.'
+  },
+  {
+    id: 2,
+    brandID: 2,
+    brand: 'BMW',
+    model: 'M3 GT',
+    year: 1994,
+    price: 125000,
+    mileage: 65000,
+    engine: '3.0L Inline-6',
+    transmission: '5-Speed Manual',
+    power: '295 hp',
+    top_speed: '275 km/h',
+    image_path: 'assets/CarImages/bmw/1994-m3gt.png',
+    status: 'Available',
+    description: 'An iconic piece of BMW M history. This E36 M3 GT is one of the rare homologation specials built in limited numbers.'
+  },
+  {
+    id: 3,
+    brandID: 3,
+    brand: 'Mercedes-Benz',
+    model: 'G63 AMG',
+    year: 2022,
+    price: 180000,
+    mileage: 8000,
+    engine: '4.0L V8 Biturbo',
+    transmission: '9-Speed Automatic',
+    power: '577 hp',
+    top_speed: '220 km/h',
+    image_path: 'assets/CarImages/mercedes/g63.png',
+    status: 'Available',
+    description: 'The ultimate luxury off-roader. The G63 AMG blends unmistakable design with formidable power and a handcrafted interior.'
+  },
+  {
+    id: 4,
+    brandID: 4,
+    brand: 'Porsche',
+    model: '911 GT2 RS',
+    year: 2018,
+    price: 350000,
+    mileage: 4500,
+    engine: '3.8L Twin-Turbo Flat-6',
+    transmission: '7-Speed PDK',
+    power: '700 hp',
+    top_speed: '340 km/h',
+    image_path: 'assets/CarImages/porsche/2018-gt2rs.png',
+    status: 'Price Upon Request',
+    description: 'The most powerful 911 ever built for the road. The GT2 RS is a track-focused monster pushing the boundaries of physics.'
+  },
+  {
+    id: 5,
+    brandID: 3,
+    brand: 'Audi',
+    model: 'Sport Quattro',
+    year: 1984,
+    price: 450000,
+    mileage: 32000,
+    engine: '2.1L Turbocharged 5-Cylinder',
+    transmission: '5-Speed Manual',
+    power: '302 hp',
+    top_speed: '250 km/h',
+    image_path: 'assets/CarImages/audi/audi-sport-quattro.png',
+    status: 'Available',
+    description: 'A Group B rally legend. The Sport Quattro is the ultimate expression of Audi\'s "Vorsprung durch Technik" from the 1980s.'
+  },
+  {
+    id: 6,
+    brandID: 2,
+    brand: 'BMW',
+    model: 'M5 (E39)',
+    year: 1996,
+    price: 85000,
+    mileage: 72000,
+    engine: '4.9L V8',
+    transmission: '6-Speed Manual',
+    power: '394 hp',
+    top_speed: '250 km/h',
+    image_path: 'assets/CarImages/bmw/1996-m5.png',
+    status: 'Available',
+    description: 'Widely regarded as the finest sports sedan ever made. The E39 M5 offers a perfect balance of luxury and raw performance.'
+  },
+  {
+    id: 7,
+    brandID: 1,
+    brand: 'Mercedes-Benz',
+    model: 'SLR McLaren',
+    year: 2003,
+    price: 420000,
+    mileage: 12000,
+    engine: '5.4L Supercharged V8',
+    transmission: '5-Speed Automatic',
+    power: '617 hp',
+    top_speed: '334 km/h',
+    image_path: 'assets/CarImages/mercedes/slr-mclaren.png',
+    status: 'Price Upon Request',
+    description: 'A collaboration between two giants of motorsport. The SLR McLaren is a long-distance grand tourer with supercar performance.'
+  }
+];
 
 /**
  * Sends an SQL string to the API and returns the result.
@@ -48,13 +166,14 @@ async function runQuery(sql) {
     const result = await response.json();
 
     if (result.success) {
-      return result.data;          // Array met rijen
+      return result.data;
     } else {
-      console.error("SQL fout in runQuery:", result.error);
-      return FALLBACK_PRODUCTEN;   // Bij een fout: fallback data
+      console.error("SQL error in runQuery:", result.error);
+      alert("An error occurred while executing the query: " + result.error);
+      return FALLBACK_PRODUCTEN;
     }
-  } catch (fout) {
-    console.error("API niet bereikbaar in runQuery:", fout);
+  } catch (error) {
+    console.error("API unreachable in runQuery:", error);
     return FALLBACK_PRODUCTEN;
   }
 }
@@ -74,7 +193,9 @@ function updateLogos(theme) {
 }
 
 /**
- * Initialises theme based on preference and sets up toggle listener.
+ * Initializes theme based on preference and sets up a toggle listener.
+ * Will use 'light' if the user prefers light mode, otherwise 'dark'.
+ * Will basically add the custom 'data-theme' attribute to the HTML element, which is used by CSS to change styles.
  */
 function initTheme() {
   const themeToggle = document.querySelector('.theme-toggle');
@@ -132,8 +253,9 @@ async function initFeaturedInventory() {
   if (!featuredGrid) return;
 
   try {
-    // Using specific column names for better compatibility
-    const allCars = await runQuery("SELECT cars.id, cars.brandID, brands.BrandName AS brand, cars.model, cars.year, cars.price, cars.image_path, cars.status, cars.description FROM cars JOIN brands ON cars.brandID = brands.BrandId");
+    // Using specific column names instead of SELECT *
+    // Added ROUND(cars.price * 1.21, 2) to include 21% VAT
+    const allCars = await runQuery("SELECT cars.id, cars.brandID, brands.BrandName AS brand, cars.model, cars.year, ROUND(cars.price * 1.21, 2) AS price, cars.image_path, cars.status, cars.description FROM cars JOIN brands ON cars.brandID = brands.BrandId");
 
     console.log("Featured Inventory - Cars fetched:", allCars);
 
@@ -143,16 +265,17 @@ async function initFeaturedInventory() {
     }
 
     // Select 3 random cars
-    const shuffled = [...allCars].sort(() => 0.5 - Math.random());
-    const featuredCars = shuffled.slice(0, 3);
+    const shuffled = [...allCars].sort(() => 0.5 - Math.random()); // first create a copy of the array (immutability) and shuffle it
+    const featuredCars = shuffled.slice(0, 3); // take the first 3 elements for featured cars
 
-    featuredGrid.innerHTML = featuredCars.map(car => {
+    featuredGrid.innerHTML = featuredCars.map(car => { // take featured cars and render them
       const displayPrice = car.status === 'Price Upon Request'
         ? 'Price Upon Request'
-        : `$${Number(car.price).toLocaleString('en-US')}`;
+        : `€${Number(car.price).toLocaleString('en-US')}`; // ternary operator for price display
 
       const brandName = car.brand || 'Unknown';
-
+      const imagePath = car.image_path || 'assets/photos/fallback.png'; // fallback image
+      // adjust based on year
       const badges = ['New Arrival', 'Rare Find', 'Top Spec', 'Exquisite'];
       if (car.year &lt; 2005) {
           badges.length = 1;
@@ -166,7 +289,7 @@ async function initFeaturedInventory() {
       return `
         &lt;div class="inventory-card">
           &lt;div class="card-image">
-            &lt;img src="${car.image_path}" alt="${brandName} ${car.model}" />
+            &lt;img src="${imagePath}" alt="${brandName} ${car.model}" />
             ${badgeText ? `&lt;div class="card-badge">${badgeText}&lt;/div>` : ''}
           &lt;/div>
           &lt;div class="card-content">
@@ -180,17 +303,15 @@ async function initFeaturedInventory() {
           &lt;/div>
         &lt;/div>
       `;
-    }).join('');
+    }).join(''); // join the array of HTML strings into a single string
 
-  } catch (error) {
+  } catch (error) { // error handling
     console.error('Failed to load featured inventory:', error);
     featuredGrid.innerHTML = '&lt;p>Check back soon for our latest arrivals.&lt;/p>';
   }
 }
 
-/**
- * Main initialization on DOM content loaded.
- */
+// initialize on page load
 window.addEventListener('DOMContentLoaded', () => {
   initTheme();
   initMobileNav();
@@ -220,29 +341,36 @@ window.addEventListener('DOMContentLoaded', () => {
 
 /**
  * Logic for the Inventory page (filtering and list rendering).
+ * @async
  * @param {HTMLElement} carGrid - The container element for the car list.
  */
 async function initInventoryPage(carGrid) {
   const brandMap = {
-    'mercedes': 'Mercedes-Benz',
+    'mercedes': 'Mercedes-Benz', // Corrected key name so that SQL does not clash with the API
     'bmw':      'BMW',
     'audi':     'Audi',
     'porsche':  'Porsche'
   };
 
-  let allCars = [];
+  let allCars = []; // once the data is fetched, it will be stored here, no need to fetch it again like if I used a const
 
+  /**
+   * Creates an HTML card for a single car.
+   * @param {Object} car - The car object from the database.
+   * @returns {string} - The HTML string for the car card.
+   */
   function createCarCard(car) {
     const displayPrice = car.status === 'Price Upon Request'
       ? 'Price Upon Request'
-      : `$${Number(car.price).toLocaleString('en-US')}`;
+      : `€${Number(car.price).toLocaleString('en-US')}`;
 
     const brandName = car.brand || 'Unknown';
+    const imagePath = car.image_path || 'assets/photos/fallback.png';
 
     return `
     &lt;article class="vehicle-card" data-brand="${brandName.toLowerCase().replace('-', '')}">
       &lt;a href="car-detail.html?id=${car.id}">
-        &lt;img src="${car.image_path}" alt="${car.year} ${brandName} ${car.model}" />
+        &lt;img src="${imagePath}" alt="${car.year} ${brandName} ${car.model}" />
         &lt;div class="vehicle-info">
           &lt;div>
             &lt;h2>${car.year} ${car.model}&lt;/h2>
@@ -258,68 +386,75 @@ async function initInventoryPage(carGrid) {
   `;
   }
 
+  /**
+   * Renders a list of cars into the car grid.
+   * @param {Array&lt;Object>} cars - Array of car objects to render.
+   */
   function renderCars(cars) {
-    if (cars.length === 0) {
+    if (cars.length === 0) { // if there are no cars, show a message instead of causing an error
       carGrid.innerHTML = '&lt;p class="no-results">No vehicles were found.&lt;/p>';
       return;
     }
-    carGrid.innerHTML = cars.map(createCarCard).join('');
+    carGrid.innerHTML = cars.map(createCarCard).join(''); // loop through cars and create HTML for each and combine them into a single string and put in the carGrid
   }
 
+  /**
+   * Loads car data from the API and initializes the page content.
+   * @async
+   */
   async function loadCars() {
-    carGrid.innerHTML = '&lt;p class="no-results">Loading vehicles...&lt;/p>';
+    carGrid.innerHTML = '&lt;p class="no-results">Loading vehicles...&lt;/p>'; // show loading message for ux
 
     try {
-      const urlParams = new URLSearchParams(window.location.search);
-      const filterParam = urlParams.get('filter')?.toLowerCase();
+      const urlParams = new URLSearchParams(window.location.search); // get the filter from the URL
+      const filterParam = urlParams.get('filter')?.toLowerCase(); // check if the user has selected a filter
 
-      // Use the same query as CRUD but with mileage added
-      allCars = await runQuery("SELECT cars.id, cars.brandID, brands.BrandName AS brand, cars.model, cars.year, cars.price, cars.mileage, cars.image_path, cars.status FROM cars JOIN brands ON cars.brandID = brands.BrandId");
+      // Use the same query as CRUD, but with a JOIN to get the brand name. Price inclusive of 21% VAT.
+      allCars = await runQuery("SELECT cars.id, cars.brandID, brands.BrandName AS brand, cars.model, cars.year, ROUND(cars.price * 1.21, 2) AS price, cars.mileage, cars.image_path, cars.status FROM cars JOIN brands ON cars.brandID = brands.BrandId");
       
-      console.log("Inventory Page - Cars fetched:", allCars);
+      console.log("Inventory Page - Cars fetched:", allCars); // log the fetched cars
 
       if (filterParam &amp;&amp; brandMap[filterParam]) {
-        const filterButtons = document.querySelectorAll('.filter-button');
-        filterButtons.forEach(btn => {
+        const filterButtons = document.querySelectorAll('.filter-button'); // select all filter buttons
+        filterButtons.forEach(btn => { // loop through each button and toggle the active class based on the filter
           btn.classList.toggle('active', btn.dataset.filter === filterParam);
         });
 
-        const filtered = allCars.filter(car => car.brand === brandMap[filterParam]);
+        const filtered = allCars.filter(car => car.brand === brandMap[filterParam]); // filter cars based on the selected filter
         renderCars(filtered);
       } else {
         renderCars(allCars);
       }
-    } catch (error) {
+    } catch (error) { // error handling
       carGrid.innerHTML = '&lt;p class="no-results">Failed to load vehicles.&lt;/p>';
       console.error('Inventory API error:', error);
     }
   }
 
-  // Filter buttons logic
-  const filterButtons = document.querySelectorAll('.filter-button');
-  filterButtons.forEach(button => {
-    button.addEventListener('click', () => {
+  // Filter buttons
+  const filterButtons = document.querySelectorAll('.filter-button'); // filter buttons
+  filterButtons.forEach(button => { // loop through each button and add a click event listener
+    button.addEventListener('click', () => { // when the button is clicked, toggle the remove active class from all buttons and add it to the clicked button
       filterButtons.forEach(btn => btn.classList.remove('active'));
       button.classList.add('active');
 
       const filter = button.dataset.filter;
       const url = new URL(window.location);
 
-      if (filter === 'all') {
+      if (filter === 'all') { // if the filter is 'all', show all cars
         renderCars(allCars);
-        url.searchParams.delete('filter');
+        url.searchParams.delete('filter'); //  remove the filter from the URL
       } else {
         const filtered = allCars.filter(car => car.brand === brandMap[filter]);
         renderCars(filtered);
         url.searchParams.set('filter', filter);
       }
-      window.history.pushState({}, '', url);
+      window.history.pushState({}, '', url); // update the URL with the new filter without reloading the page good 4 speed
     });
   });
 
   loadCars();
-}
-</code></pre>
+}</code></pre>
         </article>
     </section>
 
@@ -329,13 +464,13 @@ async function initInventoryPage(carGrid) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#API_URL">API_URL</a></li><li><a href="global.html#formulierLeegmaken">formulierLeegmaken</a></li><li><a href="global.html#formulierVullen">formulierVullen</a></li><li><a href="global.html#initFeaturedInventory">initFeaturedInventory</a></li><li><a href="global.html#initInventoryPage">initInventoryPage</a></li><li><a href="global.html#initMobileNav">initMobileNav</a></li><li><a href="global.html#initTheme">initTheme</a></li><li><a href="global.html#productOpslaan">productOpslaan</a></li><li><a href="global.html#productVerwijderen">productVerwijderen</a></li><li><a href="global.html#runQuery">runQuery</a></li><li><a href="global.html#toonBeheerLijst">toonBeheerLijst</a></li><li><a href="global.html#updateLogos">updateLogos</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#API_URL">API_URL</a></li><li><a href="global.html#clearForm">clearForm</a></li><li><a href="global.html#deleteProduct">deleteProduct</a></li><li><a href="global.html#fillForm">fillForm</a></li><li><a href="global.html#initFeaturedInventory">initFeaturedInventory</a></li><li><a href="global.html#initInventoryPage">initInventoryPage</a></li><li><a href="global.html#initMobileNav">initMobileNav</a></li><li><a href="global.html#initTheme">initTheme</a></li><li><a href="global.html#renderAdminList">renderAdminList</a></li><li><a href="global.html#runQuery">runQuery</a></li><li><a href="global.html#saveProduct">saveProduct</a></li><li><a href="global.html#updateLogos">updateLogos</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Sat Jun 06 2026 09:53:53 GMT+0200 (Central European Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Fri Jun 12 2026 05:14:12 GMT+0200 (Central European Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

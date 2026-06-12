@@ -1533,6 +1533,7 @@ footer {
     font-size: 2rem;
     font-family: "Helvetica", "Arial", sans-serif;
     font-weight: 700;
+    color: var(--text-color);
   }
 
   /* Hamburger Animation */
@@ -1581,8 +1582,13 @@ footer {
 
   /* Values Section */
   .values {
-    grid-template-columns: 1fr;
+    flex-direction: column;
     padding: 60px 30px;
+    gap: 20px;
+  }
+
+  .value-box {
+    width: 100%;
   }
 
   /* More Info Section */
@@ -1591,8 +1597,14 @@ footer {
     padding: 60px 30px;
     gap: 40px;
   }
-  .more-info .image, .more-info-text {
+  .more-info .image {
+    width: 100%;
+    height: auto;
+  }
+  .more-info-text {
     max-width: 100%;
+    padding: 0;
+    border-left: none;
   }
 
   /* Inventory Grid */

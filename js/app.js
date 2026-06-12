@@ -1,6 +1,11 @@
 /**
+ * @file app.js
+ * @description Main application logic for EuroSpec. Handles theme initialization, 
+ * mobile navigation, and inventory display on the home and inventory pages.
+ */
+
+/**
  * API_URL: the address of the API to which we send our SQL queries.
- * We use a relative path, so it works regardless of your local folder name.
  */
 const API_URL = "api.php";
 
@@ -308,6 +313,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 /**
  * Logic for the Inventory page (filtering and list rendering).
+ * @async
  * @param {HTMLElement} carGrid - The container element for the car list.
  */
 async function initInventoryPage(carGrid) {
@@ -320,6 +326,11 @@ async function initInventoryPage(carGrid) {
 
   let allCars = []; // once the data is fetched, it will be stored here, no need to fetch it again like if I used a const
 
+  /**
+   * Creates an HTML card for a single car.
+   * @param {Object} car - The car object from the database.
+   * @returns {string} - The HTML string for the car card.
+   */
   function createCarCard(car) {
     const displayPrice = car.status === 'Price Upon Request'
       ? 'Price Upon Request'
@@ -347,6 +358,10 @@ async function initInventoryPage(carGrid) {
   `;
   }
 
+  /**
+   * Renders a list of cars into the car grid.
+   * @param {Array<Object>} cars - Array of car objects to render.
+   */
   function renderCars(cars) {
     if (cars.length === 0) { // if there are no cars, show a message instead of causing an error
       carGrid.innerHTML = '<p class="no-results">No vehicles were found.</p>';
@@ -355,6 +370,10 @@ async function initInventoryPage(carGrid) {
     carGrid.innerHTML = cars.map(createCarCard).join(''); // loop through cars and create HTML for each and combine them into a single string and put in the carGrid
   }
 
+  /**
+   * Loads car data from the API and initializes the page content.
+   * @async
+   */
   async function loadCars() {
     carGrid.innerHTML = '<p class="no-results">Loading vehicles...</p>'; // show loading message for ux
 

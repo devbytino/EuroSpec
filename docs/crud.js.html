@@ -27,78 +27,123 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * CRUD functions for managing cars (Create, Read, Update, Delete).
- * This script interacts with the 'cars' and 'brands' tables in the database.
+ * @file crud.js
+ * @description Administrative functions for managing the car inventory.
+ * Provides Create, Read, Update, and Delete (CRUD) operations via the API.
  */
 
 /**
  * READ: Fetches all cars from the database with their brand names and displays them in a list.
  * Uses a SQL JOIN to combine 'cars' and 'brands' tables.
- * 
  * @async
  * @returns {Promise&lt;void>}
  */
-async function toonBeheerLijst() {
+async function renderAdminList() {
     // SELECT: we ask for columns from 'cars' and the 'BrandName' from 'brands'.
     // JOIN: we link the tables where brandID (in cars) matches BrandId (in brands).
-    const producten = await runQuery("SELECT cars.id, cars.brandID, brands.BrandName AS brand, cars.model, cars.year, cars.price FROM cars JOIN brands ON cars.brandID = brands.BrandId");
+    const products = await runQuery("SELECT cars.id, cars.brandID, brands.BrandName AS brand, cars.model, cars.year, cars.price, cars.image_path, cars.transmission, cars.power, cars.description, cars.engine, cars.top_speed, cars.mileage FROM cars JOIN brands ON cars.brandID = brands.BrandId");
 
-    const lijst = document.getElementById("carList");
-    lijst.innerHTML = "";   // Clear the list before adding items
+    const list = document.getElementById("carList");
+    list.innerHTML = "";   // Clear the list before adding items
 
-    for (const product of producten) {
+    for (const product of products) {
         const item = document.createElement("li");
+        item.style.display = "flex";
+        item.style.alignItems = "center";
+        item.style.marginBottom = "10px";
+        item.style.gap = "15px";
 
-        // Create the text display for each car in the list
-        const tekst = document.createTextNode(
-            product.year + " " + product.brand + " " + product.model + " - \u20ac" + Number(product.price).toLocaleString('en-US') + " "
+        // Create thumbnail
+        const img = document.createElement("img");
+        img.src = product.image_path || "assets/photos/amggt-placeholder.jpg"; // Fallback placeholder
+        img.style.width = "60px";
+        img.style.height = "40px";
+        img.style.objectFit = "cover";
+        img.style.borderRadius = "4px";
+        img.style.border = "1px solid var(--border-color)";
+        item.appendChild(img);
+
+        // Container for text content
+        const info = document.createElement("div");
+        info.style.flex = "1";
+        const text = document.createTextNode(
+            product.year + " " + product.brand + " " + product.model + " - \u20ac" + Number(product.price).toLocaleString('en-US')
         );
-        item.appendChild(tekst);
+        info.appendChild(text);
+        item.appendChild(info);
 
-        // Edit Button: Populate the form with this car's data
-        const bewerkKnop = document.createElement("button");
-        bewerkKnop.textContent = "Bewerken";
-        bewerkKnop.addEventListener("click", function () {
-            formulierVullen(product);
+        // Button group
+        const buttonGroup = document.createElement("div");
+        buttonGroup.className = "button-group";
+        buttonGroup.style.margin = "0";
+
+        // Edit Button
+        const editButton = document.createElement("button");
+        editButton.textContent = "Edit";
+        editButton.className = "btn-secondary";
+        editButton.style.padding = "4px 8px";
+        editButton.style.fontSize = "0.8rem";
+        editButton.addEventListener("click", function () {
+            fillForm(product);
         });
-        item.appendChild(bewerkKnop);
+        buttonGroup.appendChild(editButton);
 
-        // Delete Button: Remove this car from the database
-        const verwijderKnop = document.createElement("button");
-        verwijderKnop.textContent = "Verwijderen";
-        verwijderKnop.addEventListener("click", function () {
-            productVerwijderen(product.id);
+        // Delete Button
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete";
+        deleteButton.className = "btn-secondary";
+        deleteButton.style.padding = "4px 8px";
+        deleteButton.style.fontSize = "0.8rem";
+        deleteButton.style.color = "#ff4444";
+        deleteButton.addEventListener("click", function () {
+            deleteProduct(product.id);
         });
-        item.appendChild(verwijderKnop);
+        buttonGroup.appendChild(deleteButton);
 
-        lijst.appendChild(item);
+        item.appendChild(buttonGroup);
+        list.appendChild(item);
     }
 }
 
 /**
  * Populates the HTML form fields with data from a specific car object.
- * Used when the user clicks the "Bewerken" (Edit) button.
+ * Used when the user clicks the "Edit" button.
  * 
  * @param {Object} product - The car object containing data to fill.
  */
-function formulierVullen(product) {
+function fillForm(product) {
     document.getElementById("productId").value = product.id;
     document.getElementById("brandID").value = product.brandID;
     document.getElementById("model").value = product.model;
     document.getElementById("year").value = product.year;
     document.getElementById("price").value = product.price;
+    document.getElementById("image_path").value = product.image_path || "";
+
+    document.getElementById("mileage").value = product.mileage || "";
+    document.getElementById("transmission").value = product.transmission || "";
+    document.getElementById("power").value = product.power || "";
+    document.getElementById("description").value = product.description || "";
+    document.getElementById("engine").value = product.engine || "";
+    document.getElementById("top_speed").value = product.top_speed || "";
 }
 
 /**
  * Clears all input fields in the management form.
  * Used after saving a product or when the user cancels editing.
  */
-function formulierLeegmaken() {
+function clearForm() {
     document.getElementById("productId").value = "";
     document.getElementById("brandID").value = "";
     document.getElementById("model").value = "";
     document.getElementById("year").value = "";
     document.getElementById("price").value = "";
+    document.getElementById("image_path").value = "";
+    document.getElementById("mileage").value = "";
+    document.getElementById("transmission").value = "";
+    document.getElementById("power").value = "";
+    document.getElementById("description").value = "";
+    document.getElementById("engine").value = "";
+    document.getElementById("top_speed").value = "";
 }
 
 /**
@@ -109,17 +154,25 @@ function formulierLeegmaken() {
  * @async
  * @returns {Promise&lt;void>}
  */
-async function productOpslaan() {
+async function saveProduct() {
     // Get values from the form inputs
     const id = document.getElementById("productId").value;
     const brandID = document.getElementById("brandID").value;
     const model = document.getElementById("model").value;
     const year = document.getElementById("year").value;
     const price = document.getElementById("price").value;
+    const image_path = document.getElementById("image_path").value;
+    const mileage = document.getElementById("mileage").value;
+    const transmission = document.getElementById("transmission").value;
+    const power = document.getElementById("power").value;
+    const description = document.getElementById("description").value;
+    const engine = document.getElementById("engine").value;
+    const top_speed = document.getElementById("top_speed").value;
+    const mileageValue = mileage === "" ? "NULL" : mileage;
 
-    // Validate if a brand is selected
-    if (!brandID) {
-        alert("Selecteer a.u.b. een merk.");
+    // Basic validation
+    if (!brandID || !model || !year || !price) {
+        alert("Please fill in all mandatory fields (Brand, Model, Year, Price).");
         return;
     }
 
@@ -127,25 +180,32 @@ async function productOpslaan() {
 
     if (id === "") {
         // CREATE: Insert a new row into the 'cars' table
-        sql = "INSERT INTO cars (brandID, model, year, price) " +
-              "VALUES (" + brandID + ", '" + model + "', " + year + ", " + price + ")";
+        sql = "INSERT INTO cars (brandID, model, year, price, image_path, mileage, transmission, power, description, engine, top_speed) " +
+              "VALUES (" + brandID + ", '" + model + "', " + year + ", " + price + ", '" + image_path + "', " + mileageValue + ", '" + transmission + "', '" + power + "', '" + description + "', '" + engine + "', '" + top_speed + "')";
     } else {
         // UPDATE: Modify an existing row in the 'cars' table
         sql = "UPDATE cars SET " +
               "brandID = " + brandID + ", " +
               "model = '" + model + "', " +
               "year = " + year + ", " +
-              "price = " + price + " " +
+              "price = " + price + ", " +
+              "image_path = '" + image_path + "', " +
+              "mileage = " + mileageValue + ", " +
+              "transmission = '" + transmission + "', " +
+              "power = '" + power + "', " +
+              "description = '" + description + "', " +
+              "engine = '" + engine + "', " +
+              "top_speed = '" + top_speed + "' " +
               "WHERE id = " + id;
     }
 
-    // Execute the query via our API
-    await runQuery(sql);
+    const result = await runQuery(sql);
 
     // Refresh UI: clear form and reload the list
-    formulierLeegmaken();
-    toonBeheerLijst();
+    clearForm();
+    renderAdminList();
 }
+
 
 /**
  * DELETE: Removes a car from the database after user confirmation.
@@ -154,10 +214,10 @@ async function productOpslaan() {
  * @param {number|string} id - The unique ID of the car to delete.
  * @returns {Promise&lt;void>}
  */
-async function productVerwijderen(id) {
+async function deleteProduct(id) {
     // Ask for confirmation to prevent accidental deletions
-    const zeker = confirm("Weet je zeker dat je dit product wilt verwijderen?");
-    if (!zeker) {
+    const confirmed = confirm("Are you sure you want to delete this product?");
+    if (!confirmed) {
         return;
     }
 
@@ -165,7 +225,7 @@ async function productVerwijderen(id) {
     await runQuery("DELETE FROM cars WHERE id = " + id);
 
     // Refresh the list to show the item is gone
-    toonBeheerLijst();
+    renderAdminList();
 }
 </code></pre>
         </article>
@@ -177,13 +237,13 @@ async function productVerwijderen(id) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#API_URL">API_URL</a></li><li><a href="global.html#formulierLeegmaken">formulierLeegmaken</a></li><li><a href="global.html#formulierVullen">formulierVullen</a></li><li><a href="global.html#initFeaturedInventory">initFeaturedInventory</a></li><li><a href="global.html#initInventoryPage">initInventoryPage</a></li><li><a href="global.html#initMobileNav">initMobileNav</a></li><li><a href="global.html#initTheme">initTheme</a></li><li><a href="global.html#productOpslaan">productOpslaan</a></li><li><a href="global.html#productVerwijderen">productVerwijderen</a></li><li><a href="global.html#runQuery">runQuery</a></li><li><a href="global.html#toonBeheerLijst">toonBeheerLijst</a></li><li><a href="global.html#updateLogos">updateLogos</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#API_URL">API_URL</a></li><li><a href="global.html#clearForm">clearForm</a></li><li><a href="global.html#deleteProduct">deleteProduct</a></li><li><a href="global.html#fillForm">fillForm</a></li><li><a href="global.html#initFeaturedInventory">initFeaturedInventory</a></li><li><a href="global.html#initInventoryPage">initInventoryPage</a></li><li><a href="global.html#initMobileNav">initMobileNav</a></li><li><a href="global.html#initTheme">initTheme</a></li><li><a href="global.html#renderAdminList">renderAdminList</a></li><li><a href="global.html#runQuery">runQuery</a></li><li><a href="global.html#saveProduct">saveProduct</a></li><li><a href="global.html#updateLogos">updateLogos</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Sat Jun 06 2026 09:53:53 GMT+0200 (Central European Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Fri Jun 12 2026 05:14:12 GMT+0200 (Central European Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>
